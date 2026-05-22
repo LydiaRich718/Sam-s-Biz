@@ -557,27 +557,65 @@
       .foot-cols { grid-template-columns:repeat(2,1fr); }
     }
 
+    /* ── MOBILE NAV DROPDOWN ── */
+    .nav-menu-btn {
+      display: none;
+      align-items: center; justify-content: center;
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--bg-subtle); border: 1px solid var(--border);
+      cursor: pointer; font-family: inherit; color: var(--fg);
+      flex-shrink: 0; transition: background .2s;
+    }
+    .nav-menu-btn:hover { background: #e5e7eb; }
+    .nav-menu-btn svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; fill: none; transition: opacity .15s; }
+    .nav-menu-btn .icon-close { display: none; }
+    .nav-menu-btn.open .icon-open  { display: none; }
+    .nav-menu-btn.open .icon-close { display: block; }
+    .nav-dropdown {
+      display: none;
+      position: absolute; top: 100%; left: 0; right: 0;
+      background: rgba(255,255,255,0.98); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 14px 14px;
+      flex-direction: column; gap: 4px;
+      max-height: 0; overflow: hidden;
+      transition: max-height .35s cubic-bezier(.4,0,.2,1);
+    }
+    .nav-dropdown.open { max-height: 400px; }
+    .nav-dropdown-item {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; padding: 12px 14px;
+      background: none; border: none; border-radius: 10px;
+      font-family: inherit; font-size: 15px; font-weight: 600; letter-spacing: -.01em;
+      color: var(--fg); cursor: pointer; text-align: left;
+      transition: background .15s, color .15s;
+    }
+    .nav-dropdown-item:hover { background: var(--bg-subtle); color: var(--red); }
+    .nav-dropdown-item svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; fill: none; opacity: .4; flex-shrink: 0; }
+    .nav-dropdown-divider { height: 1px; background: var(--border); margin: 4px 0; }
+    .nav-dropdown-cta {
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; margin-top: 4px; padding: 13px 14px;
+      background: var(--red); border: none; border-radius: 10px;
+      font-family: inherit; font-size: 14px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+      color: #fff; cursor: pointer; transition: background .15s;
+    }
+    .nav-dropdown-cta:hover { background: var(--red-dark); }
+
     /* ── MOBILE ── */
     @media(max-width:640px){
-      /* nav: logo left, pills scroll below */
+      /* nav: single row logo left, hamburger right */
       nav {
-        padding:10px 14px 6px;
-        flex-direction:column;
-        align-items:flex-start;
-        gap:8px;
+        padding: 10px 14px;
+        position: relative;
       }
-      .nav-logo-text { font-size:16px; }
-      .pill-menu {
-        width:100%; gap:5px;
-        overflow-x:auto; -webkit-overflow-scrolling:touch;
-        padding-bottom:4px; flex-wrap:nowrap;
-        scrollbar-width:none;
-      }
-      .pill-menu::-webkit-scrollbar { display:none; }
-      .pill-btn { height:34px; padding:0 12px; font-size:11px; flex-shrink:0; white-space:nowrap; }
+      .nav-logo-text { font-size: 16px; }
+      .pill-menu { display: none; }
+      .nav-menu-btn { display: flex; }
+      .nav-dropdown { display: flex; }
 
-      /* hero — push below taller 2-row nav (~90px) */
-      .hero { padding:96px 16px 24px; }
+      /* hero — push below single-row nav (~62px) */
+      .hero { padding:72px 16px 24px; }
       .hero-text { padding:0; }
       .hero-logo img { width:min(260px,76vw); }
       .hero-badge { font-size:11px; }
@@ -719,6 +757,22 @@
     <li><button class="pill-btn" data-panel="contact"><span>Contact</span></button></li>
     <li><button class="pill-btn pill-cta" data-drawer="estimate"><span class="shine-text">Free Estimate</span></button></li>
   </ul>
+  <!-- mobile hamburger -->
+  <button class="nav-menu-btn" id="navMenuBtn" aria-label="Open menu" aria-expanded="false">
+    <svg class="icon-open" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <svg class="icon-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <!-- mobile dropdown -->
+  <div class="nav-dropdown" id="navDropdown" aria-hidden="true">
+    <button class="nav-dropdown-item" data-panel="services">Services <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+    <button class="nav-dropdown-item" data-panel="insurance">Insurance <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+    <button class="nav-dropdown-item" data-panel="why">Why Us <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+    <button class="nav-dropdown-item" data-panel="reviews">Reviews <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+    <button class="nav-dropdown-item" data-panel="faq">Q&amp;A <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+    <button class="nav-dropdown-item" data-panel="contact">Contact <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+    <div class="nav-dropdown-divider"></div>
+    <button class="nav-dropdown-cta" data-drawer="estimate">Get a Free Estimate</button>
+  </div>
 </nav>
 
 <!-- PANEL OVERLAY -->
@@ -1112,18 +1166,45 @@
 
   // All estimate triggers
   document.querySelectorAll('[data-drawer="estimate"]').forEach(el =>
-    el.addEventListener('click', openModal));
+    el.addEventListener('click', () => { closeMobileNav(); openModal(); }));
 
-  // Hero "How Claims Work" button
+  // Hero "How Claims Work" button + dropdown items
   document.querySelectorAll('[data-panel]:not(.pill-btn)').forEach(el =>
-    el.addEventListener('click', () => openPanel(el.dataset.panel)));
+    el.addEventListener('click', () => { closeMobileNav(); openPanel(el.dataset.panel); }));
+
+  // Mobile nav dropdown
+  const navMenuBtn  = document.getElementById('navMenuBtn');
+  const navDropdown = document.getElementById('navDropdown');
+
+  function closeMobileNav() {
+    navMenuBtn.classList.remove('open');
+    navDropdown.classList.remove('open');
+    navMenuBtn.setAttribute('aria-expanded', 'false');
+    navDropdown.setAttribute('aria-hidden', 'true');
+  }
+
+  navMenuBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    const isOpen = navDropdown.classList.toggle('open');
+    navMenuBtn.classList.toggle('open', isOpen);
+    navMenuBtn.setAttribute('aria-expanded', String(isOpen));
+    navDropdown.setAttribute('aria-hidden', String(!isOpen));
+  });
+
+  document.addEventListener('click', e => {
+    if (!nav.contains(e.target)) closeMobileNav();
+  });
+
+  // Close dropdown when a panel opens
+  const _origOpenPanel = window.openPanel;
+  window.openPanel = function(id) { closeMobileNav(); _origOpenPanel(id); };
 
   // Close
   overlay.addEventListener('click', closePanel);
   modalOL.addEventListener('click', e => { if (e.target === modalOL) closeModal(); });
   document.getElementById('modalClose').addEventListener('click', closeModal);
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closePanel(); closeModal(); }
+    if (e.key === 'Escape') { closePanel(); closeModal(); closeMobileNav(); }
   });
 </script>
 <script>
