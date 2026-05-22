@@ -557,11 +557,11 @@
       [style*="grid-template-columns:repeat(3"] { grid-template-columns:1fr !important; }
       [style*="grid-template-columns:repeat(2"] { grid-template-columns:1fr !important; }
 
-      /* cards — no flip on mobile, just tap-able */
-      .p-card { cursor:default; }
+      /* cards — tap to flip on mobile */
       .p-card:hover .p-card-inner { transform:none; }
       .p-card:hover::before { opacity:0; }
-      .p-card-inner { transform-style:flat; }
+      .p-card.flipped .p-card-inner { transform:rotateY(180deg); }
+      .p-card.flipped::before { opacity:1; animation:silver-spin 5s linear infinite; }
 
       /* contact cards */
       .contact-card { padding:20px 16px; }
@@ -728,13 +728,13 @@
         <div class="contact-icon"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.17 3.2 2 2 0 012.16 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
         <h3 style="margin-bottom:8px;">Call or Text</h3>
         <span style="font-size:18px;font-weight:700;color:var(--red);">(484) 635-0750</span>
-        <p style="margin-top:8px;color:var(--fg-muted);">Click to copy &middot; Mon–Sat, 7am–7pm</p>
+        <p style="margin-top:8px;color:var(--fg-muted);">Tap to call &middot; Mon–Sat, 7am–7pm</p>
       </a>
       <a href="mailto:rnrroofing@gmail.com" class="contact-card" data-copy="rnrroofing@gmail.com" data-copy-label="Email address copied!">
         <div class="contact-icon"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
         <h3 style="margin-bottom:8px;">Email Us</h3>
         <span style="font-size:15px;font-weight:700;color:var(--red);">rnrroofing@gmail.com</span>
-        <p style="margin-top:8px;color:var(--fg-muted);">Click to copy &middot; Reply within 24 hrs</p>
+        <p style="margin-top:8px;color:var(--fg-muted);">Tap to email &middot; Reply within 24 hrs</p>
       </a>
       <a href="https://maps.google.com/?q=2617+Alden+Road+Bryn+Athyn+PA+19009" target="_blank" rel="noopener" class="contact-card">
         <div class="contact-icon"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
@@ -1060,6 +1060,8 @@ void main(){vec2 st=coord(gl_FragCoord.xy);vec2 mouse=coord(u_mouse*u_pixelRatio
 
 document.querySelectorAll('[data-copy]').forEach(el => {
   el.addEventListener('click', e => {
+    // On touch devices let tel:/mailto: links open natively
+    if (navigator.maxTouchPoints > 0) return;
     e.preventDefault();
     navigator.clipboard.writeText(el.dataset.copy).then(() => {
       const toast = document.getElementById('toast');
@@ -1069,6 +1071,18 @@ document.querySelectorAll('[data-copy]').forEach(el => {
     });
   });
 });
+
+// Tap-to-flip cards on touch devices
+if (navigator.maxTouchPoints > 0) {
+  document.querySelectorAll('.p-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const wasFlipped = card.classList.contains('flipped');
+      // close any other open card
+      document.querySelectorAll('.p-card.flipped').forEach(c => c.classList.remove('flipped'));
+      if (!wasFlipped) card.classList.add('flipped');
+    });
+  });
+}
 </script>
 </body>
 </html>
