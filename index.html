@@ -127,6 +127,8 @@
       box-shadow: 0 20px 60px -10px rgba(0,0,0,0.15);
       max-height: calc(100vh - 69px);
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
       opacity: 0; transform: translateY(-12px); pointer-events: none;
       transition: opacity .3s, transform .3s;
     }
@@ -902,6 +904,7 @@
     nav.classList.add('panel-open');
     document.querySelectorAll('.pill-btn[data-panel]').forEach(b =>
       b.classList.toggle('active', b.dataset.panel === id));
+    document.body.style.overflow = 'hidden';
   }
 
   function closePanel(clearActive = true) {
@@ -910,6 +913,7 @@
     nav.classList.remove('panel-open');
     document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
     if (clearActive) activePanel = null;
+    document.body.style.overflow = '';
   }
 
   function openModal() {
