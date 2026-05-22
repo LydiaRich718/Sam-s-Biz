@@ -534,11 +534,23 @@
       .hero-ctas { flex-direction:column; align-items:stretch; gap:10px; }
       .btn-primary, .btn-secondary { width:100%; text-align:center; justify-content:center; }
 
-      /* collage — just center photo */
-      .collage { margin-top:20px; min-height:200px; }
-      .collage-inner { height:200px; }
-      .ci1,.ci2,.ci3,.ci4,.ci5,.ci6,.ci7,.ci8 { display:none; }
-      .ci0 { width:180px; height:134px; }
+      /* collage — horizontal scroll strip on mobile */
+      .collage { margin-top:20px; min-height:unset; height:auto; overflow:visible; }
+      .collage-inner {
+        position:static; height:auto;
+        display:flex; flex-direction:row; gap:10px;
+        overflow-x:auto; -webkit-overflow-scrolling:touch;
+        padding:0 16px 12px; scrollbar-width:none;
+      }
+      .collage-inner::-webkit-scrollbar { display:none; }
+      .collage::after { display:none; }
+      #webgl-canvas { display:none; }
+      .ci0,.ci1,.ci2,.ci3,.ci4,.ci5,.ci6 {
+        position:static; transform:none !important;
+        width:200px; height:150px; flex-shrink:0;
+        border-radius:14px; object-fit:cover; display:block;
+      }
+      .ci7,.ci8 { display:none; }
 
       /* panels — full screen overlay */
       .panel { top:0; height:100%; height:100dvh; max-height:100dvh; border-radius:0; }
