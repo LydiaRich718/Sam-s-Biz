@@ -425,6 +425,16 @@
     .p-reviewer-name { font-size:13px; font-weight:600; }
     .p-reviewer-loc  { font-size:11px; color:var(--fg-muted); }
 
+    /* before/after gallery */
+    .ba-grid { display:flex; flex-direction:column; gap:24px; }
+    .ba-pair { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .ba-img { position:relative; }
+    .ba-img img { width:100%; height:240px; object-fit:cover; display:block; border-radius:14px; }
+    .ba-badge { position:absolute; top:10px; left:10px; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; padding:4px 12px; border-radius:999px; }
+    .ba-badge.before { background:#0f172a; color:#fff; }
+    .ba-badge.after  { background:var(--red); color:#fff; }
+    .ba-label { font-size:12px; color:var(--fg-muted); margin-top:8px; text-align:center; }
+
     /* brands */
     .p-brands { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; }
     .p-brand { background:var(--bg-subtle); border:1.5px solid var(--border); border-radius:14px; padding:24px; text-align:center; }
@@ -578,6 +588,10 @@
       .p-card.flipped .p-card-inner { transform:rotateY(180deg); }
       .p-card.flipped::before { opacity:1; animation:silver-spin 5s linear infinite; }
 
+      /* before/after — stack each pair vertically */
+      .ba-pair { grid-template-columns:1fr; }
+      .ba-img img { height:200px; }
+
       /* contact cards */
       .contact-card { padding:20px 16px; }
 
@@ -627,6 +641,7 @@
     <li><button class="pill-btn" data-panel="why"><span>Why Us</span></button></li>
     <li><button class="pill-btn" data-panel="reviews"><span>Reviews</span></button></li>
     <li><button class="pill-btn" data-panel="faq"><span>Q&amp;A</span></button></li>
+    <li><button class="pill-btn" data-panel="gallery"><span>Our Work</span></button></li>
     <li><button class="pill-btn" data-panel="contact"><span>Contact</span></button></li>
     <li><button class="pill-btn pill-cta" data-drawer="estimate"><span class="shine-text">Free Estimate</span></button></li>
   </ul>
@@ -761,6 +776,46 @@
   </div>
 </div>
 
+<!-- OUR WORK GALLERY -->
+<div class="panel" id="panel-gallery">
+  <div class="panel-inner">
+    <div class="panel-label">Our Work</div>
+    <h2 class="panel-head">Real Jobs, Real Results</h2>
+    <p class="panel-sub">Side-by-side before and after photos from actual R&amp;R Roofing jobs in the Greater Philadelphia area.</p>
+    <div class="ba-grid">
+      <div>
+        <div class="ba-pair">
+          <div class="ba-img">
+            <img src="before-after1-before.jpeg" alt="Stone house before new roof" />
+            <span class="ba-badge before">Before</span>
+          </div>
+          <div class="ba-img">
+            <img src="before-after1-after.jpeg" alt="Stone house after new dark roof" />
+            <span class="ba-badge after">After</span>
+          </div>
+        </div>
+        <p class="ba-label">Stone Cape Cod — Full Roof Replacement, Bryn Athyn PA</p>
+      </div>
+      <div>
+        <div class="ba-pair">
+          <div class="ba-img">
+            <img src="before-after2-before.jpeg" alt="Brick house before new roof" />
+            <span class="ba-badge before">Before</span>
+          </div>
+          <div class="ba-img">
+            <img src="before-after2-after.jpeg" alt="Brick house after new dark charcoal roof" />
+            <span class="ba-badge after">After</span>
+          </div>
+        </div>
+        <p class="ba-label">Brick Colonial — Storm Damage Replacement, Greater Philadelphia</p>
+      </div>
+    </div>
+    <div style="margin-top:32px;display:flex;gap:12px;flex-wrap:wrap;">
+      <button class="btn-primary" data-drawer="estimate"><span class="shine-text">Get a Free Estimate</span></button>
+    </div>
+  </div>
+</div>
+
 <!-- HERO -->
 <main>
   <section class="hero">
@@ -859,6 +914,7 @@
       </div>
       <div class="foot-col">
         <h4>Company</h4>
+        <a href="#" onclick="openPanel('gallery');return false;">Our Work</a>
         <a href="#" onclick="openPanel('why');return false;">About Us</a>
         <a href="#" onclick="openPanel('reviews');return false;">Reviews</a>
         <a href="#" onclick="openPanel('faq');return false;">Q&amp;A</a>
