@@ -177,9 +177,6 @@
       display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
       padding: 80px 0 0;
     }
-    #webgl-canvas {
-      position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; display: block;
-    }
     .hero-text { position: relative; z-index: 10; max-width: 1100px; width: 100%; padding: 0 24px; text-align: center; }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 6px;
@@ -195,13 +192,19 @@
     .hero h1 em { font-style: normal; color: var(--red); }
     .hero-sub { font-size: clamp(15px, 1.8vw, 18px); color: var(--fg-muted); line-height: 1.7; max-width: 480px; margin: 0 auto 28px; }
     .hero-ctas { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-    .hero-address { margin-top: 18px; width: 100%; max-width: 480px; margin-left: auto; margin-right: auto; }
-    .addr-input-wrap { display: flex; gap: 0; border-radius: 999px; overflow: hidden; border: 1.5px solid var(--border); background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
-    .addr-input-wrap input { flex: 1; border: none; outline: none; font-family: inherit; font-size: 13px; padding: 12px 18px; background: transparent; color: var(--fg); min-width: 0; }
-    .addr-input-wrap input::placeholder { color: #94a3b8; }
-    .addr-input-wrap button { background: var(--red); color: #fff; border: none; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 700; padding: 12px 20px; white-space: nowrap; transition: background .2s; flex-shrink: 0; }
-    .addr-input-wrap button:hover { background: var(--red-dark); }
-    .addr-confirm { font-size: 13px; color: #16a34a; font-weight: 600; margin-top: 10px; text-align: center; }
+    /* before/after comparison sliders */
+    .compare-wrap { width:100%; max-width:1100px; margin:48px auto 0; padding:0 24px 0; display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .compare { position:relative; border-radius:16px; overflow:hidden; cursor:ew-resize; user-select:none; -webkit-user-select:none; box-shadow:0 20px 50px -10px rgba(0,0,0,0.18); aspect-ratio:4/3; }
+    .compare-before { display:block; width:100%; height:100%; object-fit:cover; pointer-events:none; }
+    .compare-after-clip { position:absolute; inset:0; overflow:hidden; }
+    .compare-after-clip img { width:100%; height:100%; object-fit:cover; pointer-events:none; }
+    .compare-handle { position:absolute; top:0; bottom:0; left:50%; width:3px; background:rgba(255,255,255,0.9); transform:translateX(-50%); display:flex; align-items:center; justify-content:center; pointer-events:none; }
+    .compare-btn { width:44px; height:44px; background:#fff; border-radius:50%; box-shadow:0 2px 14px rgba(0,0,0,0.22); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:transform .15s; }
+    .compare:active .compare-btn { transform:scale(1.12); }
+    .compare-btn svg { width:20px; height:20px; stroke:#374151; stroke-width:2.5; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+    .compare-badge { position:absolute; top:12px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; padding:4px 12px; border-radius:999px; pointer-events:none; }
+    .compare-badge.before { left:12px; background:#0f172a; color:#fff; }
+    .compare-badge.after  { right:12px; background:var(--red); color:#fff; }
     /* ── SHINY BUTTON ── */
     @property --shine-x {
       syntax: '<percentage>';
@@ -282,21 +285,6 @@
     .btn-secondary .shine-text { position: relative; z-index: 2; }
     .btn-secondary:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.13); color: var(--fg); }
     .btn-secondary:active { transform: scale(0.96); }
-
-    /* collage */
-    .collage { position: relative; z-index: 0; margin-top: 52px; flex: 1; width: 100%; display: flex; align-items: flex-start; justify-content: center; min-height: 680px; margin-bottom: 0; }
-    .collage-inner { position: relative; width: 100%; max-width: 1200px; height: 680px; }
-    .collage img { position: absolute; border-radius: 16px; object-fit: cover; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.18); z-index: 2; }
-    .ci0 { width: 310px; height: 220px; left:50%; top:50%; transform:translate(-50%,-50%); z-index:20; animation:float-up 6s ease-in-out infinite; animation-delay:0s; }
-    .ci1 { width: 210px; height: 155px; left:2%;  top:5%;  z-index:10; animation:float-up 6s ease-in-out infinite; animation-delay:-1.2s; }
-    .ci2 { width: 200px; height: 148px; left:30%; top:3%;  z-index:10; animation:float-up 6s ease-in-out infinite; animation-delay:-2.5s; }
-    .ci3 { width: 215px; height: 158px; right:2%; top:5%;  z-index:10; animation:float-up 6s ease-in-out infinite; animation-delay:-3.5s; }
-    .ci4 { width: 200px; height: 150px; right:2%; bottom:5%; z-index:30; animation:float-up 6s ease-in-out infinite; animation-delay:-4.8s; }
-    .ci5 { width: 215px; height: 160px; left:30%; bottom:3%; z-index:30; animation:float-up 6s ease-in-out infinite; animation-delay:-5.2s; }
-    .ci6 { width: 205px; height: 152px; left:2%;  bottom:5%; z-index:30; animation:float-up 6s ease-in-out infinite; animation-delay:-6s; }
-    .ci7 { width: 195px; height: 148px; left:2%;  top:50%; transform:translateY(-50%); z-index:10; animation:float-up 6s ease-in-out infinite; animation-delay:-0.8s; }
-    .ci8 { width: 195px; height: 148px; right:2%; top:50%; transform:translateY(-50%); z-index:10; animation:float-up 6s ease-in-out infinite; animation-delay:-3.0s; }
-    .collage::after { content:''; position:absolute; bottom:0; left:0; right:0; height:60px; background:linear-gradient(to top,#ffffff,transparent); z-index:40; pointer-events:none; }
 
     /* ── PANEL CONTENT ── */
     /* services */
@@ -520,8 +508,6 @@
     @media(max-width:900px){
       .pill-menu { gap:6px; }
       .pill-btn { height:38px; padding:0 14px; font-size:12px; }
-      .collage-inner { height:480px; }
-      .ci7,.ci8 { display:none; }
       .foot-cols { grid-template-columns:repeat(2,1fr); }
     }
 
@@ -554,24 +540,8 @@
       .hero-ctas { flex-direction:column; align-items:stretch; gap:10px; }
       .btn-primary, .btn-secondary { width:100%; text-align:center; justify-content:center; }
 
-      /* collage — WebGL shape + photo scroll strip */
-      .collage { margin-top:0; min-height:unset; height:auto; overflow:visible; display:block; }
-      /* shape sits above the strip */
-      #webgl-canvas { position:relative; width:100%; height:220px; display:block; z-index:1; }
-      .collage-inner {
-        position:static; height:auto;
-        display:flex; flex-direction:row; gap:10px;
-        overflow-x:auto; -webkit-overflow-scrolling:touch;
-        padding:0 16px 16px; scrollbar-width:none;
-      }
-      .collage-inner::-webkit-scrollbar { display:none; }
-      .collage::after { display:none; }
-      .ci0,.ci1,.ci2,.ci3,.ci4,.ci5,.ci6 {
-        position:static; transform:none !important;
-        width:180px; height:135px; flex-shrink:0;
-        border-radius:14px; object-fit:cover; display:block;
-      }
-      .ci7,.ci8 { display:none; }
+      /* compare sliders — single column on mobile */
+      .compare-wrap { grid-template-columns:1fr; padding:0 16px; margin-top:24px; }
 
       /* panels — full screen overlay */
       .panel { top:0; height:100%; height:100dvh; max-height:100dvh; border-radius:0; }
@@ -658,7 +628,6 @@
     <li><button class="pill-btn" data-panel="why"><span>Why Us</span></button></li>
     <li><button class="pill-btn" data-panel="reviews"><span>Reviews</span></button></li>
     <li><button class="pill-btn" data-panel="faq"><span>Q&amp;A</span></button></li>
-    <li><button class="pill-btn" data-panel="gallery"><span>Our Work</span></button></li>
     <li><button class="pill-btn" data-panel="contact"><span>Contact</span></button></li>
     <li><button class="pill-btn pill-cta" data-drawer="estimate"><span class="shine-text">Free Estimate</span></button></li>
   </ul>
@@ -800,45 +769,6 @@
   </div>
 </div>
 
-<!-- OUR WORK GALLERY -->
-<div class="panel" id="panel-gallery">
-  <div class="panel-inner">
-    <button class="panel-back-btn" onclick="closePanel()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back to Home</button>
-    <div class="panel-label">Our Work</div>
-    <h2 class="panel-head">Real Jobs, Real Results</h2>
-    <p class="panel-sub">Side-by-side before and after photos from actual R&amp;R Roofing jobs in the Greater Philadelphia area.</p>
-    <div class="ba-grid">
-      <div>
-        <div class="ba-pair">
-          <div class="ba-img">
-            <img src="before-after1-after.jpeg" alt="Stone house before new roof" />
-            <span class="ba-badge before">Before</span>
-          </div>
-          <div class="ba-img">
-            <img src="before-after1-before.jpeg" alt="Stone house after new dark roof" />
-            <span class="ba-badge after">After</span>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div class="ba-pair">
-          <div class="ba-img">
-            <img src="before-after2-before.jpeg" alt="Brick house before new roof" />
-            <span class="ba-badge before">Before</span>
-          </div>
-          <div class="ba-img">
-            <img src="before-after2-after.jpeg" alt="Brick house after new dark charcoal roof" />
-            <span class="ba-badge after">After</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div style="margin-top:32px;display:flex;gap:12px;flex-wrap:wrap;">
-      <button class="btn-primary" data-drawer="estimate"><span class="shine-text">Get a Free Estimate</span></button>
-    </div>
-  </div>
-</div>
-
 <!-- HERO -->
 <main>
   <section class="hero">
@@ -853,27 +783,36 @@
         <button class="btn-primary" data-drawer="estimate"><span class="shine-text">Get a Free Estimate</span></button>
         <button class="btn-secondary" data-panel="insurance"><span class="shine-text">How Claims Work →</span></button>
       </div>
-      <div class="hero-address fade-up d4">
-        <div class="addr-input-wrap">
-          <input id="addrInput" type="text" placeholder="Enter your address — we'll come take a look for free" autocomplete="street-address" />
-          <button onclick="submitAddress()">Let's Go →</button>
-        </div>
-        <p id="addrConfirm" class="addr-confirm" style="display:none"></p>
-      </div>
     </div>
 
-    <div class="collage">
-      <canvas id="webgl-canvas"></canvas>
-      <div class="collage-inner">
-        <img class="ci0" src="stock3.png" alt="R&R Roofing inspector on roof" />
-        <img class="ci1" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=500&q=80&auto=format&fit=crop" alt="Beautiful home exterior" />
-        <img class="ci2" src="stock1.png" alt="Roofer working on shingles" />
-        <img class="ci3" src="stock4.png" alt="Beautiful home with new roof" />
-        <img class="ci4" src="https://images.unsplash.com/photo-1635424824849-1b09bdcc55b1?w=500&q=80&auto=format&fit=crop" alt="Roofer installing shingles" />
-        <img class="ci5" src="stock2.png" alt="House with ladder for roof work" />
-        <img class="ci6" src="https://images.unsplash.com/photo-1558036117-15d82a90b9b1?w=600&q=80&auto=format&fit=crop" alt="Residential roofing" />
-        <img class="ci7" src="https://images.unsplash.com/photo-1591588582259-e675bd2e6088?w=500&q=80&auto=format&fit=crop" alt="Roof damage inspection" />
-        <img class="ci8" src="https://images.unsplash.com/photo-1567361808960-dec9cb578182?w=500&q=80&auto=format&fit=crop" alt="New roof installation" />
+    <div class="compare-wrap fade-up d4">
+      <!-- Job 1: Stone house -->
+      <div class="compare" id="compare1">
+        <img class="compare-before" src="before-after1-before.jpeg" alt="Stone house before new roof" draggable="false" />
+        <div class="compare-after-clip">
+          <img src="before-after1-after.jpeg" alt="Stone house after new roof" draggable="false" />
+        </div>
+        <div class="compare-handle">
+          <div class="compare-btn">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/><polyline points="9 6 15 12 9 18"/></svg>
+          </div>
+        </div>
+        <span class="compare-badge before">Before</span>
+        <span class="compare-badge after">After</span>
+      </div>
+      <!-- Job 2: Brick house -->
+      <div class="compare" id="compare2">
+        <img class="compare-before" src="before-after2-before.jpeg" alt="Brick house before new roof" draggable="false" />
+        <div class="compare-after-clip">
+          <img src="before-after2-after.jpeg" alt="Brick house after new roof" draggable="false" />
+        </div>
+        <div class="compare-handle">
+          <div class="compare-btn">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/><polyline points="9 6 15 12 9 18"/></svg>
+          </div>
+        </div>
+        <span class="compare-badge before">Before</span>
+        <span class="compare-badge after">After</span>
       </div>
     </div>
   </section>
@@ -944,7 +883,6 @@
       </div>
       <div class="foot-col">
         <h4>Company</h4>
-        <a href="#" onclick="openPanel('gallery');return false;">Our Work</a>
         <a href="#" onclick="openPanel('why');return false;">About Us</a>
         <a href="#" onclick="openPanel('reviews');return false;">Reviews</a>
         <a href="#" onclick="openPanel('faq');return false;">Q&amp;A</a>
@@ -1041,86 +979,26 @@
   });
 </script>
 <script>
-(function(){
-  const canvas = document.getElementById('webgl-canvas');
-  const ctx    = canvas.getContext('2d');
+// Before/after comparison sliders
+document.querySelectorAll('.compare').forEach(el => {
+  let dragging = false;
+  const clip   = el.querySelector('.compare-after-clip');
+  const handle = el.querySelector('.compare-handle');
 
-  function resize() {
-    const dpr = Math.min(devicePixelRatio, 2);
-    const w = canvas.offsetWidth || canvas.parentElement.clientWidth || window.innerWidth;
-    const h = canvas.offsetHeight || (window.innerWidth <= 640 ? 220 : canvas.parentElement.clientHeight);
-    canvas.width  = w * dpr;
-    canvas.height = h * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  function setPos(clientX) {
+    const rect = el.getBoundingClientRect();
+    const pct  = Math.max(0, Math.min(100, (clientX - rect.left) / rect.width * 100));
+    clip.style.clipPath  = `inset(0 ${100 - pct}% 0 0)`;
+    handle.style.left    = pct + '%';
   }
 
-  // Recursively draw a jagged lightning bolt segment
-  function bolt(x1, y1, x2, y2, spread, depth) {
-    if (depth === 0 || spread < 0.5) {
-      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
-      return;
-    }
-    const mx = (x1 + x2) / 2 + (Math.random() - 0.5) * spread;
-    const my = (y1 + y2) / 2 + (Math.random() - 0.5) * spread * 0.25;
-    bolt(x1, y1, mx, my, spread / 2, depth - 1);
-    bolt(mx, my, x2, y2, spread / 2, depth - 1);
-    // random side branch
-    if (depth > 2 && Math.random() < 0.45) {
-      const bx = mx + (Math.random() - 0.5) * spread * 1.5;
-      const by = my + Math.random() * spread * 1.2;
-      ctx.globalAlpha *= 0.55;
-      bolt(mx, my, bx, by, spread / 3, depth - 2);
-      ctx.globalAlpha /= 0.55;
-    }
-  }
-
-  function flash(alpha, lineW, color) {
-    const w = canvas.offsetWidth, h = canvas.offsetHeight;
-    const x  = w * 0.15 + Math.random() * w * 0.7;
-    const ex = x + (Math.random() - 0.5) * w * 0.25;
-    ctx.save();
-    ctx.globalAlpha  = alpha;
-    ctx.strokeStyle  = color;
-    ctx.lineWidth    = lineW;
-    ctx.shadowColor  = color;
-    ctx.shadowBlur   = 18;
-    ctx.lineCap      = 'round';
-    bolt(x, 0, ex, h * (0.55 + Math.random() * 0.3), w * 0.1, 9);
-    ctx.restore();
-  }
-
-  function spawnStrike() {
-    const w = canvas.offsetWidth, h = canvas.offsetHeight;
-    ctx.clearRect(0, 0, w, h);
-
-    // bright core
-    flash(0.55 + Math.random() * 0.2, 1.5, 'rgba(220,235,255,1)');
-    // outer glow pass
-    flash(0.18, 3.5, 'rgba(180,210,255,0.6)');
-
-    // optional double-strike (30% chance)
-    if (Math.random() < 0.3) {
-      flash(0.3 + Math.random() * 0.15, 1.2, 'rgba(220,235,255,1)');
-    }
-
-    // quick fade: clear after 100ms, then a faint afterglow, then fully clear
-    setTimeout(() => {
-      ctx.clearRect(0, 0, w, h);
-      flash(0.06, 2, 'rgba(200,220,255,0.4)');
-      setTimeout(() => ctx.clearRect(0, 0, w, h), 180);
-    }, 90);
-  }
-
-  function scheduleNext() {
-    const delay = 1200 + Math.random() * 1800;
-    setTimeout(() => { spawnStrike(); scheduleNext(); }, delay);
-  }
-
-  window.addEventListener('resize', () => { resize(); });
-  resize();
-  // short delay so layout is settled before first strike
-  setTimeout(() => { spawnStrike(); scheduleNext(); }, 600);
-})();
+  el.addEventListener('mousedown',  e => { dragging = true; setPos(e.clientX); });
+  el.addEventListener('touchstart', e => { dragging = true; setPos(e.touches[0].clientX); }, {passive:true});
+  window.addEventListener('mousemove',  e => { if (dragging) setPos(e.clientX); });
+  window.addEventListener('touchmove',  e => { if (dragging) setPos(e.touches[0].clientX); }, {passive:true});
+  window.addEventListener('mouseup',    () => { dragging = false; });
+  window.addEventListener('touchend',   () => { dragging = false; });
+});
 </script>
 
 <div class="toast" id="toast"></div>
@@ -1153,18 +1031,6 @@ if (navigator.maxTouchPoints > 0) {
   });
 }
 
-function submitAddress() {
-  const input   = document.getElementById('addrInput');
-  const confirm = document.getElementById('addrConfirm');
-  const val = input.value.trim();
-  if (!val) { input.focus(); return; }
-  confirm.textContent = '✓ Got it! Sam will be in touch to schedule your free visit at ' + val + '.';
-  confirm.style.display = 'block';
-  input.value = '';
-}
-document.getElementById('addrInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') submitAddress();
-});
 </script>
 </body>
 </html>
