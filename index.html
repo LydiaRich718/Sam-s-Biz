@@ -797,8 +797,6 @@
             <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/><polyline points="9 6 15 12 9 18"/></svg>
           </div>
         </div>
-        <span class="compare-badge before">Before</span>
-        <span class="compare-badge after">After</span>
       </div>
       <!-- Job 2: Brick house -->
       <div class="compare" id="compare2">
@@ -811,8 +809,6 @@
             <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/><polyline points="9 6 15 12 9 18"/></svg>
           </div>
         </div>
-        <span class="compare-badge before">Before</span>
-        <span class="compare-badge after">After</span>
       </div>
     </div>
   </section>
@@ -979,23 +975,30 @@
   });
 </script>
 <script>
-// Before/after comparison sliders
+// Before/after comparison sliders — left=before, right=after
 document.querySelectorAll('.compare').forEach(el => {
   let dragging = false;
   const clip   = el.querySelector('.compare-after-clip');
   const handle = el.querySelector('.compare-handle');
 
-  function setPos(clientX) {
-    const rect = el.getBoundingClientRect();
-    const pct  = Math.max(0, Math.min(100, (clientX - rect.left) / rect.width * 100));
-    clip.style.clipPath  = `inset(0 ${100 - pct}% 0 0)`;
-    handle.style.left    = pct + '%';
+  function setPos(pct) {
+    pct = Math.max(0, Math.min(100, pct));
+    clip.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+    handle.style.left   = pct + '%';
   }
 
-  el.addEventListener('mousedown',  e => { dragging = true; setPos(e.clientX); });
-  el.addEventListener('touchstart', e => { dragging = true; setPos(e.touches[0].clientX); }, {passive:true});
-  window.addEventListener('mousemove',  e => { if (dragging) setPos(e.clientX); });
-  window.addEventListener('touchmove',  e => { if (dragging) setPos(e.touches[0].clientX); }, {passive:true});
+  function posFromClientX(clientX) {
+    const rect = el.getBoundingClientRect();
+    return (clientX - rect.left) / rect.width * 100;
+  }
+
+  // start at 50%
+  setPos(50);
+
+  el.addEventListener('mousedown',  e => { dragging = true; setPos(posFromClientX(e.clientX)); });
+  el.addEventListener('touchstart', e => { dragging = true; setPos(posFromClientX(e.touches[0].clientX)); }, {passive:true});
+  window.addEventListener('mousemove',  e => { if (dragging) setPos(posFromClientX(e.clientX)); });
+  window.addEventListener('touchmove',  e => { if (dragging) setPos(posFromClientX(e.touches[0].clientX)); }, {passive:true});
   window.addEventListener('mouseup',    () => { dragging = false; });
   window.addEventListener('touchend',   () => { dragging = false; });
 });
