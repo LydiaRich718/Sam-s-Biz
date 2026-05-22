@@ -524,8 +524,8 @@
       .pill-menu::-webkit-scrollbar { display:none; }
       .pill-btn { height:34px; padding:0 12px; font-size:11px; flex-shrink:0; white-space:nowrap; }
 
-      /* hero — push below taller nav */
-      .hero { padding:100px 16px 24px; }
+      /* hero — push below taller 2-row nav (~90px) */
+      .hero { padding:96px 16px 24px; }
       .hero-text { padding:0; }
       .hero-logo img { width:min(260px,76vw); }
       .hero-badge { font-size:11px; }
@@ -534,20 +534,21 @@
       .hero-ctas { flex-direction:column; align-items:stretch; gap:10px; }
       .btn-primary, .btn-secondary { width:100%; text-align:center; justify-content:center; }
 
-      /* collage — horizontal scroll strip on mobile */
-      .collage { margin-top:20px; min-height:unset; height:auto; overflow:visible; }
+      /* collage — WebGL shape + photo scroll strip */
+      .collage { margin-top:0; min-height:unset; height:auto; overflow:visible; display:block; }
+      /* shape sits above the strip */
+      #webgl-canvas { position:relative; width:100%; height:220px; display:block; z-index:1; }
       .collage-inner {
         position:static; height:auto;
         display:flex; flex-direction:row; gap:10px;
         overflow-x:auto; -webkit-overflow-scrolling:touch;
-        padding:0 16px 12px; scrollbar-width:none;
+        padding:0 16px 16px; scrollbar-width:none;
       }
       .collage-inner::-webkit-scrollbar { display:none; }
       .collage::after { display:none; }
-      #webgl-canvas { display:none; }
       .ci0,.ci1,.ci2,.ci3,.ci4,.ci5,.ci6 {
         position:static; transform:none !important;
-        width:200px; height:150px; flex-shrink:0;
+        width:180px; height:135px; flex-shrink:0;
         border-radius:14px; object-fit:cover; display:block;
       }
       .ci7,.ci8 { display:none; }
@@ -1033,10 +1034,13 @@ void main(){vec2 st=coord(gl_FragCoord.xy);vec2 mouse=coord(u_mouse*u_pixelRatio
 
   function resize() {
     const dpr = Math.min(devicePixelRatio,2);
-    canvas.width  = container.clientWidth  * dpr;
-    canvas.height = container.clientHeight * dpr;
-    canvas.style.width  = container.clientWidth  + 'px';
-    canvas.style.height = container.clientHeight + 'px';
+    const isMobile = window.innerWidth <= 640;
+    const w = container.clientWidth  || window.innerWidth;
+    const h = isMobile ? 220 : (container.clientHeight || window.innerHeight);
+    canvas.width  = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width  = w + 'px';
+    canvas.style.height = h + 'px';
     gl.viewport(0,0,canvas.width,canvas.height);
   }
 
