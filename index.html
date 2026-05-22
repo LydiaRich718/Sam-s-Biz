@@ -1011,125 +1011,84 @@
 </script>
 <script>
 (function(){
-  const canvas    = document.getElementById('webgl-canvas');
-  const container = canvas.parentElement; // .collage div
-  const hero      = document.querySelector('.hero');
-  const gl        = canvas.getContext('webgl',{antialias:true,alpha:true});
-  if(!gl) return;
-
-  const VS = `attribute vec3 a_position;attribute vec2 a_uv;varying vec2 v_texcoord;void main(){gl_Position=vec4(a_position,1.0);v_texcoord=a_uv;}`;
-  const FS = `
-#ifdef GL_ES
-precision highp float;
-#endif
-uniform vec2 u_mouse;uniform vec2 u_resolution;uniform float u_pixelRatio;uniform float u_time;uniform int u_shape;
-#define PI 3.1415926535897932384626433832795
-#define TWO_PI 6.2831853071795864769252867665590
-mat3 rotateX(float a){float s=sin(a),c=cos(a);return mat3(1,0,0,0,c,-s,0,s,c);}
-mat3 rotateY(float a){float s=sin(a),c=cos(a);return mat3(c,0,s,0,1,0,-s,0,c);}
-mat3 rotateZ(float a){float s=sin(a),c=cos(a);return mat3(c,-s,0,s,c,0,0,0,1);}
-vec2 coord(in vec2 p){p=p/u_resolution.xy;if(u_resolution.x>u_resolution.y){p.x*=u_resolution.x/u_resolution.y;p.x+=(u_resolution.y-u_resolution.x)/u_resolution.y/2.0;}else{p.y*=u_resolution.y/u_resolution.x;p.y+=(u_resolution.x-u_resolution.y)/u_resolution.x/2.0;}p-=0.5;return p;}
-vec2 project(vec3 p){float persp=2.0/(2.0-p.z);return p.xy*persp;}
-float distToSegment(vec2 p,vec2 a,vec2 b){vec2 pa=p-a,ba=b-a;float h=clamp(dot(pa,ba)/dot(ba,ba),0.0,1.0);return length(pa-ba*h);}
-float drawLine(vec2 p,vec2 a,vec2 b,float thickness,float blur){float d=distToSegment(p,a,b);return smoothstep(thickness+blur,thickness-blur,d);}
-void getCubeVerts(out vec3 v[8]){float s=0.7;v[0]=vec3(-s,-s,-s);v[1]=vec3(s,-s,-s);v[2]=vec3(s,s,-s);v[3]=vec3(-s,s,-s);v[4]=vec3(-s,-s,s);v[5]=vec3(s,-s,s);v[6]=vec3(s,s,s);v[7]=vec3(-s,s,s);}
-void getOctaVerts(out vec3 v[6]){v[0]=vec3(1,0,0);v[1]=vec3(-1,0,0);v[2]=vec3(0,1,0);v[3]=vec3(0,-1,0);v[4]=vec3(0,0,1);v[5]=vec3(0,0,-1);}
-void getIcoVerts(out vec3 v[12]){float t=(1.0+sqrt(5.0))/2.0,s=1.0/sqrt(1.0+t*t);v[0]=vec3(-s,t*s,0);v[1]=vec3(s,t*s,0);v[2]=vec3(-s,-t*s,0);v[3]=vec3(s,-t*s,0);v[4]=vec3(0,-s,t*s);v[5]=vec3(0,s,t*s);v[6]=vec3(0,-s,-t*s);v[7]=vec3(0,s,-t*s);v[8]=vec3(t*s,0,-s);v[9]=vec3(t*s,0,s);v[10]=vec3(-t*s,0,-s);v[11]=vec3(-t*s,0,s);}
-float drawWireframe(vec2 p,int shape,mat3 rot,float scale,float thick,float blur){
-  float r=0.0;
-  if(shape==0){vec3 v[8];getCubeVerts(v);for(int i=0;i<8;i++)v[i]=rot*(v[i]*scale);
-    r+=drawLine(p,project(v[0]),project(v[1]),thick,blur);r+=drawLine(p,project(v[1]),project(v[2]),thick,blur);r+=drawLine(p,project(v[2]),project(v[3]),thick,blur);r+=drawLine(p,project(v[3]),project(v[0]),thick,blur);
-    r+=drawLine(p,project(v[4]),project(v[5]),thick,blur);r+=drawLine(p,project(v[5]),project(v[6]),thick,blur);r+=drawLine(p,project(v[6]),project(v[7]),thick,blur);r+=drawLine(p,project(v[7]),project(v[4]),thick,blur);
-    r+=drawLine(p,project(v[0]),project(v[4]),thick,blur);r+=drawLine(p,project(v[1]),project(v[5]),thick,blur);r+=drawLine(p,project(v[2]),project(v[6]),thick,blur);r+=drawLine(p,project(v[3]),project(v[7]),thick,blur);
-  }else if(shape==1){vec3 v[6];getOctaVerts(v);for(int i=0;i<6;i++)v[i]=rot*(v[i]*scale);
-    r+=drawLine(p,project(v[2]),project(v[0]),thick,blur);r+=drawLine(p,project(v[2]),project(v[1]),thick,blur);r+=drawLine(p,project(v[2]),project(v[4]),thick,blur);r+=drawLine(p,project(v[2]),project(v[5]),thick,blur);
-    r+=drawLine(p,project(v[3]),project(v[0]),thick,blur);r+=drawLine(p,project(v[3]),project(v[1]),thick,blur);r+=drawLine(p,project(v[3]),project(v[4]),thick,blur);r+=drawLine(p,project(v[3]),project(v[5]),thick,blur);
-    r+=drawLine(p,project(v[0]),project(v[4]),thick,blur);r+=drawLine(p,project(v[4]),project(v[1]),thick,blur);r+=drawLine(p,project(v[1]),project(v[5]),thick,blur);r+=drawLine(p,project(v[5]),project(v[0]),thick,blur);
-  }else{vec3 v[12];getIcoVerts(v);for(int i=0;i<12;i++)v[i]=rot*(v[i]*scale);
-    r+=drawLine(p,project(v[0]),project(v[1]),thick,blur);r+=drawLine(p,project(v[0]),project(v[5]),thick,blur);r+=drawLine(p,project(v[0]),project(v[7]),thick,blur);r+=drawLine(p,project(v[0]),project(v[10]),thick,blur);r+=drawLine(p,project(v[0]),project(v[11]),thick,blur);
-    r+=drawLine(p,project(v[1]),project(v[5]),thick,blur);r+=drawLine(p,project(v[1]),project(v[7]),thick,blur);r+=drawLine(p,project(v[1]),project(v[8]),thick,blur);r+=drawLine(p,project(v[1]),project(v[9]),thick,blur);
-    r+=drawLine(p,project(v[2]),project(v[3]),thick,blur);r+=drawLine(p,project(v[2]),project(v[4]),thick,blur);r+=drawLine(p,project(v[2]),project(v[6]),thick,blur);r+=drawLine(p,project(v[2]),project(v[10]),thick,blur);r+=drawLine(p,project(v[2]),project(v[11]),thick,blur);
-    r+=drawLine(p,project(v[3]),project(v[4]),thick,blur);r+=drawLine(p,project(v[3]),project(v[6]),thick,blur);r+=drawLine(p,project(v[3]),project(v[8]),thick,blur);r+=drawLine(p,project(v[3]),project(v[9]),thick,blur);
-    r+=drawLine(p,project(v[4]),project(v[5]),thick,blur);r+=drawLine(p,project(v[4]),project(v[11]),thick,blur);r+=drawLine(p,project(v[5]),project(v[11]),thick,blur);
-    r+=drawLine(p,project(v[6]),project(v[7]),thick,blur);r+=drawLine(p,project(v[6]),project(v[8]),thick,blur);r+=drawLine(p,project(v[6]),project(v[10]),thick,blur);
-    r+=drawLine(p,project(v[7]),project(v[10]),thick,blur);r+=drawLine(p,project(v[8]),project(v[9]),thick,blur);r+=drawLine(p,project(v[9]),project(v[11]),thick,blur);r+=drawLine(p,project(v[10]),project(v[11]),thick,blur);
-  }
-  return clamp(r,0.0,1.0);
-}
-vec3 render(vec2 st,vec2 mouse){
-  float md=length(st-mouse);float mi=1.0-smoothstep(0.0,0.5,md);
-  float time=u_time*0.2;
-  mat3 rot=rotateY(time+(mouse.x-0.5)*mi*1.0)*rotateX(time*0.7+(mouse.y-0.5)*mi*1.0)*rotateZ(time*0.1);
-  float blur=mix(0.0001,0.05,mi);float thick=mix(0.003,0.005,mi);
-  float ar=u_resolution.x/u_resolution.y;float fitScale=0.6*min(1.0,ar);
-  float shape=drawWireframe(st,u_shape,rot,fitScale,thick,blur);
-  vec3 baseColor=mix(vec3(0.18,0.20,0.24),vec3(0.08,0.09,0.12),mi);
-  vec3 color=baseColor*shape*(0.9+mi*0.4);
-  return pow(color,vec3(0.85));
-}
-void main(){vec2 st=coord(gl_FragCoord.xy);vec2 mouse=coord(u_mouse*u_pixelRatio)*vec2(1.,-1.);vec3 c=render(st,mouse);float a=clamp(length(c)*4.0,0.0,1.0);gl_FragColor=vec4(c,a);}`;
-
-  function compileShader(type, src) {
-    const s = gl.createShader(type);
-    gl.shaderSource(s, src); gl.compileShader(s);
-    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { console.error(gl.getShaderInfoLog(s)); return null; }
-    return s;
-  }
-  const prog = gl.createProgram();
-  gl.attachShader(prog, compileShader(gl.VERTEX_SHADER, VS));
-  gl.attachShader(prog, compileShader(gl.FRAGMENT_SHADER, FS));
-  gl.linkProgram(prog); gl.useProgram(prog);
-
-  const uniforms = {};
-  ['u_mouse','u_resolution','u_pixelRatio','u_time','u_shape'].forEach(u =>
-    uniforms[u] = gl.getUniformLocation(prog, u));
-
-  const verts = new Float32Array([-1,-1,0,1,-1,0,-1,1,0,1,1,0]);
-  const uvs   = new Float32Array([0,0,1,0,0,1,1,1]);
-  const pb = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,pb); gl.bufferData(gl.ARRAY_BUFFER,verts,gl.STATIC_DRAW);
-  const pl = gl.getAttribLocation(prog,'a_position'); gl.enableVertexAttribArray(pl); gl.vertexAttribPointer(pl,3,gl.FLOAT,false,0,0);
-  const ub = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,ub); gl.bufferData(gl.ARRAY_BUFFER,uvs,gl.STATIC_DRAW);
-  const ul = gl.getAttribLocation(prog,'a_uv'); gl.enableVertexAttribArray(ul); gl.vertexAttribPointer(ul,2,gl.FLOAT,false,0,0);
-
-  const mouse = {x:0,y:0}, damp = {x:0,y:0};
-  let shape = 0, last = performance.now();
-  const start = Date.now();
+  const canvas = document.getElementById('webgl-canvas');
+  const ctx    = canvas.getContext('2d');
 
   function resize() {
-    const dpr = Math.min(devicePixelRatio,2);
-    const isMobile = window.innerWidth <= 640;
-    const w = container.clientWidth  || window.innerWidth;
-    const h = isMobile ? 220 : (container.clientHeight || window.innerHeight);
+    const dpr = Math.min(devicePixelRatio, 2);
+    const w = canvas.offsetWidth || canvas.parentElement.clientWidth || window.innerWidth;
+    const h = canvas.offsetHeight || (window.innerWidth <= 640 ? 220 : canvas.parentElement.clientHeight);
     canvas.width  = w * dpr;
     canvas.height = h * dpr;
-    canvas.style.width  = w + 'px';
-    canvas.style.height = h + 'px';
-    gl.viewport(0,0,canvas.width,canvas.height);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  function animate(now) {
-    const dt = (now - last) / 1000; last = now;
-    damp.x += (mouse.x - damp.x) * 8 * dt;
-    damp.y += (mouse.y - damp.y) * 8 * dt;
-    gl.clearColor(0.0,0.0,0.0,0); gl.clear(gl.COLOR_BUFFER_BIT);
-    const dpr = Math.min(devicePixelRatio,2);
-    gl.uniform2f(uniforms.u_mouse, damp.x, damp.y);
-    gl.uniform2f(uniforms.u_resolution, canvas.width, canvas.height);
-    gl.uniform1f(uniforms.u_pixelRatio, dpr);
-    gl.uniform1f(uniforms.u_time, (Date.now()-start)/1000);
-    gl.uniform1i(uniforms.u_shape, shape);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    requestAnimationFrame(animate);
+  // Recursively draw a jagged lightning bolt segment
+  function bolt(x1, y1, x2, y2, spread, depth) {
+    if (depth === 0 || spread < 0.5) {
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+      return;
+    }
+    const mx = (x1 + x2) / 2 + (Math.random() - 0.5) * spread;
+    const my = (y1 + y2) / 2 + (Math.random() - 0.5) * spread * 0.25;
+    bolt(x1, y1, mx, my, spread / 2, depth - 1);
+    bolt(mx, my, x2, y2, spread / 2, depth - 1);
+    // random side branch
+    if (depth > 2 && Math.random() < 0.45) {
+      const bx = mx + (Math.random() - 0.5) * spread * 1.5;
+      const by = my + Math.random() * spread * 1.2;
+      ctx.globalAlpha *= 0.55;
+      bolt(mx, my, bx, by, spread / 3, depth - 2);
+      ctx.globalAlpha /= 0.55;
+    }
   }
 
-  window.addEventListener('mousemove', e => {
-    const r = canvas.getBoundingClientRect();
-    mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
-  });
-  container.addEventListener('click', () => { shape = (shape + 1) % 3; });
-  window.addEventListener('resize', resize);
+  function flash(alpha, lineW, color) {
+    const w = canvas.offsetWidth, h = canvas.offsetHeight;
+    const x  = w * 0.15 + Math.random() * w * 0.7;
+    const ex = x + (Math.random() - 0.5) * w * 0.25;
+    ctx.save();
+    ctx.globalAlpha  = alpha;
+    ctx.strokeStyle  = color;
+    ctx.lineWidth    = lineW;
+    ctx.shadowColor  = color;
+    ctx.shadowBlur   = 18;
+    ctx.lineCap      = 'round';
+    bolt(x, 0, ex, h * (0.55 + Math.random() * 0.3), w * 0.1, 9);
+    ctx.restore();
+  }
+
+  function spawnStrike() {
+    const w = canvas.offsetWidth, h = canvas.offsetHeight;
+    ctx.clearRect(0, 0, w, h);
+
+    // bright core
+    flash(0.55 + Math.random() * 0.2, 1.5, 'rgba(220,235,255,1)');
+    // outer glow pass
+    flash(0.18, 3.5, 'rgba(180,210,255,0.6)');
+
+    // optional double-strike (30% chance)
+    if (Math.random() < 0.3) {
+      flash(0.3 + Math.random() * 0.15, 1.2, 'rgba(220,235,255,1)');
+    }
+
+    // quick fade: clear after 100ms, then a faint afterglow, then fully clear
+    setTimeout(() => {
+      ctx.clearRect(0, 0, w, h);
+      flash(0.06, 2, 'rgba(200,220,255,0.4)');
+      setTimeout(() => ctx.clearRect(0, 0, w, h), 180);
+    }, 90);
+  }
+
+  function scheduleNext() {
+    const delay = 1200 + Math.random() * 1800;
+    setTimeout(() => { spawnStrike(); scheduleNext(); }, delay);
+  }
+
+  window.addEventListener('resize', () => { resize(); });
   resize();
-  requestAnimationFrame(animate);
+  // short delay so layout is settled before first strike
+  setTimeout(() => { spawnStrike(); scheduleNext(); }, 600);
 })();
 </script>
 
