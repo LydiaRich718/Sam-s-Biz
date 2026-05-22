@@ -405,12 +405,22 @@
     .p-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 7px; color: var(--fg); }
     .p-card p  { font-size: 13px; color: var(--fg-muted); line-height: 1.7; }
 
-    /* process steps */
-    .p-steps { display: grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap: 14px; }
-    .p-step { background: var(--bg-subtle); border: 1.5px solid var(--border); border-radius: 14px; padding: 24px 20px; }
-    .p-step-num { display: inline-block; font-size: 11px; font-weight: 800; color: var(--red); background: var(--red-light); padding: 3px 10px; border-radius: 999px; margin-bottom: 14px; }
-    .p-step h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
-    .p-step p { font-size: 13px; color: var(--fg-muted); line-height: 1.6; }
+    /* ── INSURANCE TIMELINE ── */
+    .ins-head { font-size:clamp(22px,3.2vw,36px); font-weight:800; letter-spacing:-.04em; color:var(--fg); margin-bottom:12px; line-height:1.2; }
+    .ins-sub { font-size:15px; color:var(--fg-muted); line-height:1.75; max-width:620px; margin-bottom:52px; }
+    .ins-timeline { position:relative; display:flex; align-items:flex-start; margin-bottom:44px; }
+    .ins-timeline::before { content:''; position:absolute; top:15px; left:0; right:0; height:1px; background:linear-gradient(to right, transparent 8.5%, var(--border) 8.5%, var(--border) 91.5%, transparent 91.5%); z-index:0; pointer-events:none; }
+    .ins-step { flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 12px; position:relative; z-index:1; cursor:default; transition:transform .3s cubic-bezier(.25,.46,.45,.94); }
+    .ins-step:hover { transform:translateY(-5px); }
+    .ins-num { width:30px; height:30px; border-radius:50%; background:var(--red); color:#fff; font-size:10px; font-weight:800; letter-spacing:.04em; display:flex; align-items:center; justify-content:center; margin-bottom:22px; flex-shrink:0; box-shadow:0 0 0 5px #fff, 0 0 0 6px var(--border); }
+    .ins-body { display:flex; flex-direction:column; align-items:center; }
+    .ins-icon { width:32px; height:32px; color:var(--fg-mid); margin-bottom:12px; }
+    .ins-icon svg { width:100%; height:100%; stroke:currentColor; fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+    .ins-title { font-size:13px; font-weight:700; color:var(--fg); margin-bottom:8px; line-height:1.35; }
+    .ins-desc { font-size:12.5px; color:var(--fg-muted); line-height:1.7; }
+    .ins-callout { border-left:3px solid var(--red); padding:18px 22px; background:var(--bg-subtle); border-radius:0 12px 12px 0; }
+    .ins-callout strong { font-size:14px; font-weight:700; color:var(--fg); display:block; margin-bottom:5px; }
+    .ins-callout p { font-size:13.5px; color:var(--fg-muted); line-height:1.7; margin:0; }
 
     /* why */
     .p-grid-2x2 { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:14px; }
@@ -622,6 +632,15 @@
       .toast { bottom:20px; font-size:12px; }
       /* faq q&a title */
       .qa-title { font-size:clamp(56px,18vw,90px); margin-bottom:20px; }
+      /* insurance timeline → vertical on mobile */
+      .ins-timeline { flex-direction:column; gap:0; }
+      .ins-timeline::before { top:0; bottom:0; left:14px; width:1px; height:auto; right:auto; background:linear-gradient(to bottom, transparent 2%, var(--border) 2%, var(--border) 98%, transparent 98%); }
+      .ins-step { flex-direction:row; align-items:flex-start; gap:20px; padding:0 0 28px 0; text-align:left; }
+      .ins-step:hover { transform:none; }
+      .ins-num { margin-bottom:0; flex-shrink:0; }
+      .ins-body { align-items:flex-start; }
+      .ins-icon { display:none; }
+      .ins-sub { margin-bottom:32px; }
     }
 
     /* ── VERY SMALL ── */
@@ -725,18 +744,53 @@
   <div class="panel-inner">
     <button class="panel-back-btn" onclick="closePanel()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back to Home</button>
     <div class="panel-label">Insurance Restoration</div>
-    <h2 class="panel-head">We Handle the Hard Part</h2>
-    <p class="panel-sub">Most homeowners leave money on the table. Here's how we make sure you don't.</p>
-    <div class="p-steps">
-      <div class="p-step"><span class="p-step-num">01</span><h4>Free Inspection</h4><p>Photos, measurements, full damage report.</p></div>
-      <div class="p-step"><span class="p-step-num">02</span><h4>File Your Claim</h4><p>We help you file so nothing gets missed.</p></div>
-      <div class="p-step"><span class="p-step-num">03</span><h4>Meet the Adjuster</h4><p>We're on-site to account for every line item.</p></div>
-      <div class="p-step"><span class="p-step-num">04</span><h4>Approve &amp; Schedule</h4><p>Most jobs scheduled within days of approval.</p></div>
-      <div class="p-step"><span class="p-step-num">05</span><h4>Installation Day</h4><p>Pro crew, clean site, new roof — usually one day.</p></div>
-      <div class="p-step"><span class="p-step-num">06</span><h4>Final Payment</h4><p>Satisfied with your new roof? Pay your balance securely online. <a href="#" style="color:var(--red);font-weight:700;text-decoration:none;">Click here to pay →</a></p></div>
+    <h2 class="ins-head">From Inspection to Insurance Approval</h2>
+    <p class="ins-sub">Insurance claims can feel overwhelming. We help document the damage, meet with the adjuster, and guide you through the process from inspection to final installation.</p>
+    <div class="ins-timeline">
+      <div class="ins-step">
+        <div class="ins-num">01</div>
+        <div class="ins-body">
+          <span class="ins-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></span>
+          <h4 class="ins-title">Free Roof Inspection</h4>
+          <p class="ins-desc">Photos, measurements, and full storm damage documentation.</p>
+        </div>
+      </div>
+      <div class="ins-step">
+        <div class="ins-num">02</div>
+        <div class="ins-body">
+          <span class="ins-icon"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></span>
+          <h4 class="ins-title">Insurance Claim Support</h4>
+          <p class="ins-desc">We help provide the documentation your insurance company may request and guide you through the next steps.</p>
+        </div>
+      </div>
+      <div class="ins-step">
+        <div class="ins-num">03</div>
+        <div class="ins-body">
+          <span class="ins-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>
+          <h4 class="ins-title">Adjuster Meeting</h4>
+          <p class="ins-desc">We meet with your adjuster on-site to review the documented damage together.</p>
+        </div>
+      </div>
+      <div class="ins-step">
+        <div class="ins-num">04</div>
+        <div class="ins-body">
+          <span class="ins-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+          <h4 class="ins-title">Roof Replacement</h4>
+          <p class="ins-desc">Once approved, we schedule your project and complete most roofs in as little as one day.</p>
+        </div>
+      </div>
+      <div class="ins-step">
+        <div class="ins-num">05</div>
+        <div class="ins-body">
+          <span class="ins-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></span>
+          <h4 class="ins-title">Final Walkthrough &amp; Payment</h4>
+          <p class="ins-desc">We review the completed work with you, clean the site thoroughly, and finalize payment once you're satisfied.</p>
+        </div>
+      </div>
     </div>
-    <div style="margin-top:20px;padding:24px;background:var(--red-light);border:1.5px solid #fca5a5;border-radius:14px;">
-      <p style="font-size:14px;color:var(--fg-mid);line-height:1.7;"><strong style="color:var(--fg);">What does it cost you?</strong> Most insurance claims cover the full replacement — you typically only pay your deductible. We'll walk you through exactly what to expect before anything starts.</p>
+    <div class="ins-callout">
+      <strong>Most homeowners only pay their deductible.</strong>
+      <p>Insurance typically covers the full replacement cost. We'll walk you through exactly what to expect before anything starts.</p>
     </div>
   </div>
 </div>
