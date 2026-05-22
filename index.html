@@ -192,19 +192,36 @@
     .hero h1 em { font-style: normal; color: var(--red); }
     .hero-sub { font-size: clamp(15px, 1.8vw, 18px); color: var(--fg-muted); line-height: 1.7; max-width: 480px; margin: 0 auto 28px; }
     .hero-ctas { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-    /* before/after comparison sliders */
-    .compare-wrap { width:100%; max-width:1100px; margin:48px auto 0; padding:0 24px 0; display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-    .compare { position:relative; border-radius:16px; overflow:hidden; cursor:ew-resize; user-select:none; -webkit-user-select:none; box-shadow:0 20px 50px -10px rgba(0,0,0,0.18); aspect-ratio:4/3; }
-    .compare-before { display:block; width:100%; height:100%; object-fit:cover; pointer-events:none; }
-    .compare-after-clip { position:absolute; inset:0; overflow:hidden; }
-    .compare-after-clip img { width:100%; height:100%; object-fit:cover; pointer-events:none; }
-    .compare-handle { position:absolute; top:0; bottom:0; left:50%; width:3px; background:rgba(255,255,255,0.9); transform:translateX(-50%); display:flex; align-items:center; justify-content:center; pointer-events:none; }
-    .compare-btn { width:44px; height:44px; background:#fff; border-radius:50%; box-shadow:0 2px 14px rgba(0,0,0,0.22); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:transform .15s; }
-    .compare:active .compare-btn { transform:scale(1.12); }
-    .compare-btn svg { width:20px; height:20px; stroke:#374151; stroke-width:2.5; fill:none; stroke-linecap:round; stroke-linejoin:round; }
-    .compare-badge { position:absolute; top:12px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; padding:4px 12px; border-radius:999px; pointer-events:none; }
-    .compare-badge.before { left:12px; background:#0f172a; color:#fff; }
-    .compare-badge.after  { right:12px; background:var(--red); color:#fff; }
+    /* ── IMAGE FAN ── */
+    .fan-wrap { width:100%; display:flex; justify-content:center; gap:80px; margin:56px auto 16px; flex-wrap:wrap; padding:0 24px; }
+    .fan-group { position:relative; width:220px; height:220px; flex-shrink:0; }
+    .fan-card {
+      position:absolute; width:190px; height:190px; top:50%; left:50%;
+      background:#fff; border-radius:14px; overflow:hidden;
+      box-shadow:0 8px 32px rgba(0,0,0,0.18);
+      padding:7px; box-sizing:border-box;
+      transform:translate(-50%,-50%) rotate(0deg) translate(0px,0px);
+      transition:transform 0.7s cubic-bezier(0.34,1.42,0.64,1);
+      cursor:pointer;
+    }
+    .fan-card img { width:100%; height:100%; object-fit:cover; border-radius:9px; display:block; pointer-events:none; }
+    /* fanned state set by JS via data-fanned */
+    .fan-group[data-fanned] .fan-card:nth-child(1) { transform:translate(-50%,-50%) rotate(-8deg) translate(-150px,10px); z-index:30; }
+    .fan-group[data-fanned] .fan-card:nth-child(2) { transform:translate(-50%,-50%) rotate(5deg) translate(0px,0px);    z-index:20; }
+    .fan-group[data-fanned] .fan-card:nth-child(3) { transform:translate(-50%,-50%) rotate(-5deg) translate(150px,20px); z-index:10; }
+    /* hover nudge */
+    .fan-group[data-fanned] .fan-card:nth-child(1):hover { transform:translate(-50%,-50%) rotate(-2deg) translate(-155px,0px); }
+    .fan-group[data-fanned] .fan-card:nth-child(2):hover { transform:translate(-50%,-50%) rotate(0deg)  translate(0px,-12px); }
+    .fan-group[data-fanned] .fan-card:nth-child(3):hover { transform:translate(-50%,-50%) rotate(-1deg) translate(152px,8px); }
+    @media(max-width:640px){
+      .fan-wrap { gap:60px; margin:36px auto 8px; }
+      .fan-group { width:170px; height:170px; }
+      .fan-card { width:150px; height:150px; padding:5px; border-radius:12px; }
+      .fan-group[data-fanned] .fan-card:nth-child(1) { transform:translate(-50%,-50%) rotate(-8deg) translate(-110px,8px); }
+      .fan-group[data-fanned] .fan-card:nth-child(3) { transform:translate(-50%,-50%) rotate(-5deg) translate(110px,16px); }
+      .fan-group[data-fanned] .fan-card:nth-child(1):hover { transform:translate(-50%,-50%) rotate(-2deg) translate(-115px,0px); }
+      .fan-group[data-fanned] .fan-card:nth-child(3):hover { transform:translate(-50%,-50%) rotate(-1deg) translate(112px,6px); }
+    }
     /* ── SHINY BUTTON ── */
     @property --shine-x {
       syntax: '<percentage>';
@@ -540,9 +557,6 @@
       .hero-ctas { flex-direction:column; align-items:stretch; gap:10px; }
       .btn-primary, .btn-secondary { width:100%; text-align:center; justify-content:center; }
 
-      /* compare sliders — single column on mobile */
-      .compare-wrap { grid-template-columns:1fr; padding:0 16px; margin-top:24px; }
-
       /* panels — full screen overlay */
       .panel { top:0; height:100%; height:100dvh; max-height:100dvh; border-radius:0; }
       .panel-inner { padding:24px 16px 60px; }
@@ -785,30 +799,18 @@
       </div>
     </div>
 
-    <div class="compare-wrap fade-up d4">
-      <!-- Job 1: Stone house -->
-      <div class="compare" id="compare1">
-        <img class="compare-before" src="before-after1-before.jpeg" alt="Stone house before new roof" draggable="false" />
-        <div class="compare-after-clip">
-          <img src="before-after1-after.jpeg" alt="Stone house after new roof" draggable="false" />
-        </div>
-        <div class="compare-handle">
-          <div class="compare-btn">
-            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/><polyline points="9 6 15 12 9 18"/></svg>
-          </div>
-        </div>
+    <div class="fan-wrap">
+      <!-- Fan group 1: stone house job -->
+      <div class="fan-group">
+        <div class="fan-card"><img src="before-after1-before.jpeg" alt="Stone house before" /></div>
+        <div class="fan-card"><img src="stock3.png" alt="R&R Roofing on site" /></div>
+        <div class="fan-card"><img src="before-after1-after.jpeg" alt="Stone house after new roof" /></div>
       </div>
-      <!-- Job 2: Brick house -->
-      <div class="compare" id="compare2">
-        <img class="compare-before" src="before-after2-before.jpeg" alt="Brick house before new roof" draggable="false" />
-        <div class="compare-after-clip">
-          <img src="before-after2-after.jpeg" alt="Brick house after new roof" draggable="false" />
-        </div>
-        <div class="compare-handle">
-          <div class="compare-btn">
-            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/><polyline points="9 6 15 12 9 18"/></svg>
-          </div>
-        </div>
+      <!-- Fan group 2: brick house job -->
+      <div class="fan-group">
+        <div class="fan-card"><img src="before-after2-before.jpeg" alt="Brick house before" /></div>
+        <div class="fan-card"><img src="stock1.png" alt="Roofer on the job" /></div>
+        <div class="fan-card"><img src="before-after2-after.jpeg" alt="Brick house after new roof" /></div>
       </div>
     </div>
   </section>
@@ -975,33 +977,12 @@
   });
 </script>
 <script>
-// Before/after comparison sliders — left=before, right=after
-document.querySelectorAll('.compare').forEach(el => {
-  let dragging = false;
-  const clip   = el.querySelector('.compare-after-clip');
-  const handle = el.querySelector('.compare-handle');
-
-  function setPos(pct) {
-    pct = Math.max(0, Math.min(100, pct));
-    clip.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
-    handle.style.left   = pct + '%';
-  }
-
-  function posFromClientX(clientX) {
-    const rect = el.getBoundingClientRect();
-    return (clientX - rect.left) / rect.width * 100;
-  }
-
-  // start at 50%
-  setPos(50);
-
-  el.addEventListener('mousedown',  e => { dragging = true; setPos(posFromClientX(e.clientX)); });
-  el.addEventListener('touchstart', e => { dragging = true; setPos(posFromClientX(e.touches[0].clientX)); }, {passive:true});
-  window.addEventListener('mousemove',  e => { if (dragging) setPos(posFromClientX(e.clientX)); });
-  window.addEventListener('touchmove',  e => { if (dragging) setPos(posFromClientX(e.touches[0].clientX)); }, {passive:true});
-  window.addEventListener('mouseup',    () => { dragging = false; });
-  window.addEventListener('touchend',   () => { dragging = false; });
-});
+// Fan animation — trigger after short delay so layout is settled
+setTimeout(() => {
+  document.querySelectorAll('.fan-group').forEach((group, i) => {
+    setTimeout(() => group.setAttribute('data-fanned', ''), i * 180);
+  });
+}, 300);
 </script>
 
 <div class="toast" id="toast"></div>
