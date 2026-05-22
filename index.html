@@ -134,6 +134,7 @@
     }
     .panel.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
     .panel-inner { max-width: 1100px; margin: 0 auto; padding: 48px 32px 56px; }
+    .panel-back-btn { display: none; }
     .panel-label { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--red); margin-bottom: 10px; }
     .panel-head { font-size: clamp(26px,3.5vw,40px); font-weight: 800; letter-spacing: -.04em; color: var(--fg); margin-bottom: 10px; }
     .panel-sub { font-size: 15px; color: var(--fg-muted); line-height: 1.7; margin-bottom: 36px; }
@@ -194,6 +195,13 @@
     .hero h1 em { font-style: normal; color: var(--red); }
     .hero-sub { font-size: clamp(15px, 1.8vw, 18px); color: var(--fg-muted); line-height: 1.7; max-width: 480px; margin: 0 auto 28px; }
     .hero-ctas { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .hero-address { margin-top: 18px; width: 100%; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .addr-input-wrap { display: flex; gap: 0; border-radius: 999px; overflow: hidden; border: 1.5px solid var(--border); background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+    .addr-input-wrap input { flex: 1; border: none; outline: none; font-family: inherit; font-size: 13px; padding: 12px 18px; background: transparent; color: var(--fg); min-width: 0; }
+    .addr-input-wrap input::placeholder { color: #94a3b8; }
+    .addr-input-wrap button { background: var(--red); color: #fff; border: none; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 700; padding: 12px 20px; white-space: nowrap; transition: background .2s; flex-shrink: 0; }
+    .addr-input-wrap button:hover { background: var(--red-dark); }
+    .addr-confirm { font-size: 13px; color: #16a34a; font-weight: 600; margin-top: 10px; text-align: center; }
     /* ── SHINY BUTTON ── */
     @property --shine-x {
       syntax: '<percentage>';
@@ -572,6 +580,15 @@
       .panel-head { font-size:clamp(20px,6vw,30px); }
       .panel-sub { font-size:13px; }
 
+      /* back to home button */
+      .panel-back-btn {
+        display: inline-flex; align-items: center; gap: 6px;
+        font-size: 13px; font-weight: 600; color: var(--fg-muted);
+        background: none; border: none; cursor: pointer;
+        padding: 0 0 12px 0; margin-bottom: 4px;
+      }
+      .panel-back-btn svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
+
       /* close button bigger tap target */
       .panel-close { width:36px; height:36px; font-size:22px; }
 
@@ -653,6 +670,7 @@
 <!-- PANEL: SERVICES -->
 <div class="panel" id="panel-services">
   <div class="panel-inner">
+    <button class="panel-back-btn" onclick="closePanel()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back to Home</button>
     <div class="panel-label">What We Do</div>
     <h2 class="panel-head">Full-Service Roofing</h2>
     <p class="panel-sub">Residential and commercial — inspection through install, all in-house.</p>
@@ -678,6 +696,7 @@
 <!-- PANEL: INSURANCE -->
 <div class="panel" id="panel-insurance">
   <div class="panel-inner">
+    <button class="panel-back-btn" onclick="closePanel()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back to Home</button>
     <div class="panel-label">Insurance Restoration</div>
     <h2 class="panel-head">We Handle the Hard Part</h2>
     <p class="panel-sub">Most homeowners leave money on the table. Here's how we make sure you don't.</p>
@@ -698,6 +717,7 @@
 <!-- PANEL: WHY US -->
 <div class="panel" id="panel-why">
   <div class="panel-inner">
+    <button class="panel-back-btn" onclick="closePanel()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back to Home</button>
     <div class="panel-label">Why R&amp;R</div>
     <h2 class="panel-head">We Fight for Every Dollar<br/>Your Insurance Owes You.</h2>
     <p class="panel-sub">Most contractors hand you an estimate and walk away. We stay in your corner the whole way.</p>
@@ -720,6 +740,7 @@
 <!-- PANEL: REVIEWS -->
 <div class="panel" id="panel-reviews">
   <div class="panel-inner">
+    <button class="panel-back-btn" onclick="closePanel()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back to Home</button>
     <div class="panel-label">Reviews</div>
     <h2 class="panel-head">What Homeowners Say</h2>
     <p class="panel-sub">Real customers, real results across PA and NJ.</p>
@@ -734,6 +755,7 @@
 <!-- PANEL: FAQ -->
 <div class="panel" id="panel-faq">
   <div class="panel-inner">
+    <button class="panel-back-btn" onclick="closePanel()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back to Home</button>
     <div class="panel-label">Q&amp;A</div>
     <h2 class="panel-head">Common Questions</h2>
     <p class="panel-sub">Answers to what most homeowners ask us first.</p>
@@ -751,6 +773,7 @@
 <!-- PANEL: CONTACT -->
 <div class="panel" id="panel-contact">
   <div class="panel-inner">
+    <button class="panel-back-btn" onclick="closePanel()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back to Home</button>
     <div class="panel-label">Contact</div>
     <h2 class="panel-head">Get in Touch</h2>
     <p class="panel-sub">Reach us directly — we're the owners, so you'll always talk to someone who knows your job.</p>
@@ -780,6 +803,7 @@
 <!-- OUR WORK GALLERY -->
 <div class="panel" id="panel-gallery">
   <div class="panel-inner">
+    <button class="panel-back-btn" onclick="closePanel()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back to Home</button>
     <div class="panel-label">Our Work</div>
     <h2 class="panel-head">Real Jobs, Real Results</h2>
     <p class="panel-sub">Side-by-side before and after photos from actual R&amp;R Roofing jobs in the Greater Philadelphia area.</p>
@@ -828,6 +852,13 @@
       <div class="hero-ctas fade-up d4">
         <button class="btn-primary" data-drawer="estimate"><span class="shine-text">Get a Free Estimate</span></button>
         <button class="btn-secondary" data-panel="insurance"><span class="shine-text">How Claims Work →</span></button>
+      </div>
+      <div class="hero-address fade-up d4">
+        <div class="addr-input-wrap">
+          <input id="addrInput" type="text" placeholder="Enter your address — we'll come take a look for free" autocomplete="street-address" />
+          <button onclick="submitAddress()">Let's Go →</button>
+        </div>
+        <p id="addrConfirm" class="addr-confirm" style="display:none"></p>
       </div>
     </div>
 
@@ -1121,6 +1152,19 @@ if (navigator.maxTouchPoints > 0) {
     });
   });
 }
+
+function submitAddress() {
+  const input   = document.getElementById('addrInput');
+  const confirm = document.getElementById('addrConfirm');
+  const val = input.value.trim();
+  if (!val) { input.focus(); return; }
+  confirm.textContent = '✓ Got it! Sam will be in touch to schedule your free visit at ' + val + '.';
+  confirm.style.display = 'block';
+  input.value = '';
+}
+document.getElementById('addrInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') submitAddress();
+});
 </script>
 </body>
 </html>
