@@ -129,10 +129,10 @@
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       overscroll-behavior: contain;
-      opacity: 0; transform: translateY(-12px); pointer-events: none;
-      transition: opacity .3s, transform .3s;
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s;
     }
-    .panel.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+    .panel.visible { opacity: 1; pointer-events: all; }
     .panel-inner { max-width: 1100px; margin: 0 auto; padding: 48px 32px 56px; }
     .panel-back-btn { display: none; }
     .panel-label { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--red); margin-bottom: 10px; }
@@ -173,7 +173,7 @@
     /* ── HERO ── */
     .hero {
       position: relative; width: 100%;
-      background: #ffffff; overflow: hidden;
+      background: #ffffff;
       display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
       padding: 80px 0 0;
     }
@@ -186,13 +186,12 @@
     }
     .hero-badge span { width: 6px; height: 6px; border-radius: 50%; background: var(--red); }
     .hero h1 {
-      font-size: clamp(42px, 6.5vw, 76px); font-weight: 800; letter-spacing: -.04em; line-height: 1.05;
-      color: var(--fg); margin-bottom: 18px;
+      font-size: clamp(42px, 6.5vw, 76px); font-weight: 300; letter-spacing: -0.01em; line-height: 1.3;
+      color: #000; margin-bottom: 18px;
     }
-    .hero h1 em { font-style: normal; color: var(--red); }
-    #text-rotate { display:inline-block; min-width:2ch; vertical-align:bottom; overflow:hidden; }
-    .tr-char { display:inline-block; animation: tr-in 0.5s cubic-bezier(0.34,1.56,0.64,1) both; }
-    .tr-char.exit { animation: tr-out 0.28s cubic-bezier(0.4,0,1,1) both; }
+    #text-rotate { display:inline-block; text-align:center; color:#fff; background:var(--red); font-weight:800; letter-spacing:-.04em; border-radius:999px; padding:0.05em 0.35em 0.1em; overflow:hidden; vertical-align:middle; }
+    .tr-char { display:inline-block; animation: tr-in 0.28s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .tr-char.exit { animation: tr-out 0.15s cubic-bezier(0.4,0,1,1) both; }
     @keyframes tr-in  { from { opacity:0; transform:translateY(55%);  } to { opacity:1; transform:translateY(0); } }
     @keyframes tr-out { from { opacity:1; transform:translateY(0);     } to { opacity:0; transform:translateY(-75%); } }
     .hero-sub { font-size: clamp(15px, 1.8vw, 18px); color: var(--fg-muted); line-height: 1.7; max-width: 480px; margin: 0 auto 28px; }
@@ -210,11 +209,9 @@
       cursor:pointer;
     }
     .fan-card img { width:100%; height:100%; object-fit:cover; border-radius:9px; display:block; pointer-events:none; }
-    /* fanned state set by JS via data-fanned */
     .fan-group[data-fanned] .fan-card:nth-child(1) { transform:translate(-50%,-50%) rotate(-8deg) translate(-150px,10px); z-index:30; }
     .fan-group[data-fanned] .fan-card:nth-child(2) { transform:translate(-50%,-50%) rotate(5deg) translate(0px,0px);    z-index:20; }
     .fan-group[data-fanned] .fan-card:nth-child(3) { transform:translate(-50%,-50%) rotate(-5deg) translate(150px,20px); z-index:10; }
-    /* hover nudge */
     .fan-group[data-fanned] .fan-card:nth-child(1):hover { transform:translate(-50%,-50%) rotate(-2deg) translate(-155px,0px); }
     .fan-group[data-fanned] .fan-card:nth-child(2):hover { transform:translate(-50%,-50%) rotate(0deg)  translate(0px,-12px); }
     .fan-group[data-fanned] .fan-card:nth-child(3):hover { transform:translate(-50%,-50%) rotate(-1deg) translate(152px,8px); }
@@ -623,6 +620,8 @@
 
       /* toast */
       .toast { bottom:20px; font-size:12px; }
+      /* faq q&a title */
+      .qa-title { font-size:clamp(56px,18vw,90px); margin-bottom:20px; }
     }
 
     /* ── VERY SMALL ── */
@@ -631,6 +630,46 @@
       .hero-logo img { width:70vw; }
       .foot-cols { grid-template-columns:1fr; }
       .hero h1 { font-size:26px; }
+    }
+    /* ── GRADIENT GLOW TEXT (Why Us) ── */
+    @keyframes tg-fg-anim { from,16.667%,to{opacity:1} 33.333%,83.333%{opacity:0} }
+    .tg-hero { background:#0f172a; border-radius:20px; padding:44px 40px 40px; margin-bottom:20px; }
+    .tg-trio { display:flex; align-items:flex-start; gap:0; }
+    .tg-item { flex:1; padding:0 28px; text-align:center; display:flex; flex-direction:column; align-items:center; }
+    .tg-item:first-child { padding-left:0; }
+    .tg-item:last-child { padding-right:0; }
+    .tg-divider { width:1px; background:rgba(255,255,255,0.12); flex-shrink:0; margin:6px 0; }
+    .tg-w { position:relative; display:inline-block; font-size:clamp(38px,5vw,66px); font-weight:800; letter-spacing:-.04em; line-height:1.1; user-select:none; }
+    .tg-w::before { content:attr(data-w); position:absolute; inset:0; color:rgba(255,255,255,0.22); pointer-events:none; }
+    .tg-fg { display:inline; animation:tg-fg-anim 8s infinite; }
+    .tg-fg1 { color:#fca5a5; text-shadow:0 0 22px #ef4444,0 0 50px rgba(249,115,22,0.55); }
+    .tg-fg2 { color:#c4b5fd; text-shadow:0 0 22px #8b5cf6,0 0 50px rgba(236,72,153,0.55); animation-delay:-2.667s; }
+    .tg-fg3 { color:#fde68a; text-shadow:0 0 22px #f59e0b,0 0 50px rgba(239,68,68,0.55); animation-delay:-5.333s; }
+    .tg-desc { font-size:13.5px; color:rgba(255,255,255,0.55); line-height:1.75; margin-top:14px; }
+    /* ── FAQ Q&A TITLE ── */
+    .qa-title { font-size:clamp(80px,13vw,160px); font-weight:900; letter-spacing:-.06em; line-height:1; margin-bottom:32px; user-select:none; }
+    .qa-q { color:var(--fg); }
+    .qa-amp { color:var(--border); font-weight:300; }
+    .qa-a { color:var(--red); }
+    /* ── OUR WORK / BEFORE-AFTER ── */
+    .work-section { background: var(--bg-subtle); padding: 80px 24px; }
+    .work-inner { max-width: 960px; margin: 0 auto; text-align: center; }
+    .work-inner .panel-label { margin-bottom: 8px; }
+    .work-inner .panel-head { margin-bottom: 40px; }
+    .work-grid { display: flex; flex-direction: column; gap: 20px; }
+    .work-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .work-photo { position: relative; border-radius: 16px; overflow: hidden; aspect-ratio: 4/3; }
+    .work-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .work-label { position:absolute; bottom:12px; left:12px; font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; padding:5px 14px; border-radius:999px; }
+    .work-label-before { background: rgba(0,0,0,0.55); color: #fff; }
+    .work-label-after  { background: var(--red); color: #fff; }
+    @media(max-width:600px){
+      .work-section { padding: 56px 16px; }
+      .work-pair { grid-template-columns: 1fr; gap: 8px; }
+      .tg-hero { padding:28px 20px 24px; }
+      .tg-trio { flex-direction:column; gap:24px; }
+      .tg-item { padding:0 !important; }
+      .tg-divider { display:none; }
     }
   </style>
 </head>
@@ -707,8 +746,24 @@
   <div class="panel-inner">
     <button class="panel-back-btn" onclick="closePanel()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back to Home</button>
     <div class="panel-label">Why R&amp;R</div>
-    <h2 class="panel-head">We Fight for Every Dollar<br/>Your Insurance Owes You.</h2>
-    <p class="panel-sub">Most contractors hand you an estimate and walk away. We stay in your corner the whole way.</p>
+    <div class="tg-hero">
+      <div class="tg-trio">
+        <div class="tg-item">
+          <span class="tg-w" data-w="Inspect."><span class="tg-fg tg-fg1">Inspect.</span></span>
+          <p class="tg-desc">We climb every roof ourselves — full photo documentation and a damage report your insurer can't ignore.</p>
+        </div>
+        <div class="tg-divider"></div>
+        <div class="tg-item">
+          <span class="tg-w" data-w="Advocate."><span class="tg-fg tg-fg2">Advocate.</span></span>
+          <p class="tg-desc">We meet your adjuster on-site and fight for every line item. Most homeowners only pay their deductible.</p>
+        </div>
+        <div class="tg-divider"></div>
+        <div class="tg-item">
+          <span class="tg-w" data-w="Win."><span class="tg-fg tg-fg3">Win.</span></span>
+          <p class="tg-desc">New roof, full coverage, one contractor in your corner — from first call to final walkthrough.</p>
+        </div>
+      </div>
+    </div>
     <div class="p-grid-2x2" style="margin-bottom:14px;">
       <div class="p-card"><div class="p-card-inner"><div class="p-card-front"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span><h3>All Major Carriers</h3><p>State Farm, Allstate, USAA, Liberty Mutual — we know the process for every major insurer.</p></div><div class="p-card-back"><h4>All Carriers</h4><p>State Farm, Allstate, USAA, Liberty Mutual, Travelers, and more. We know every carrier's process and speak their language — so your claim moves faster.</p></div></div></div>
       <div class="p-card"><div class="p-card-inner"><div class="p-card-front"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></span><h3>Full Claim Guidance</h3><p>We walk you through filing, meet the adjuster on-site, and advocate for the full scope of damage.</p></div><div class="p-card-back"><h4>Claim Guidance</h4><p>We handle every step — from filing to the adjuster meeting to final approval. You don't lift a finger. We make sure the full scope of damage is on record.</p></div></div></div>
@@ -744,9 +799,7 @@
 <div class="panel" id="panel-faq">
   <div class="panel-inner">
     <button class="panel-back-btn" onclick="closePanel()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back to Home</button>
-    <div class="panel-label">Q&amp;A</div>
-    <h2 class="panel-head">Common Questions</h2>
-    <p class="panel-sub">Answers to what most homeowners ask us first.</p>
+    <div class="qa-title"><span class="qa-q">Q</span><span class="qa-amp">&amp;</span><span class="qa-a">A</span></div>
     <div class="p-grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
       <div class="p-card"><div class="p-card-inner"><div class="p-card-front" style="justify-content:center;"><h3>Does insurance cover storm damage?</h3><p style="margin-top:8px;">Tap to find out →</p></div><div class="p-card-back"><h4>The Answer</h4><p>Most homeowner policies cover wind and hail damage. If enough storm-related damage is found during inspection, your insurer is typically required to pay for a full replacement.</p></div></div></div>
       <div class="p-card"><div class="p-card-inner"><div class="p-card-front" style="justify-content:center;"><h3>Will my rates go up?</h3><p style="margin-top:8px;">Tap to find out →</p></div><div class="p-card-back"><h4>The Answer</h4><p>Storm damage claims are typically treated as "act of God" — different from at-fault claims. Rate impacts vary by carrier and state, but many homeowners see no increase at all.</p></div></div></div>
@@ -796,7 +849,7 @@
         <img src="logo.png" alt="R&R Roofing" />
       </div>
       <div class="hero-badge fade-up d2"><span></span> Bryn Athyn, PA &middot; Greater Philadelphia</div>
-      <h1 class="fade-up d3">Storm Damage?<br/><em>We Handle <span id="text-rotate" aria-live="polite"></span></em></h1>
+      <h1 class="fade-up d3">Storm Damage?<br/>We Handle <span id="text-rotate" aria-live="polite"></span></h1>
       <p class="hero-sub fade-up d3">Free inspection to final install — R&amp;R Roofing works directly with your insurance so you don't have to.</p>
       <div class="hero-ctas fade-up d4">
         <button class="btn-primary" data-drawer="estimate"><span class="shine-text">Get a Free Estimate</span></button>
@@ -805,17 +858,40 @@
     </div>
 
     <div class="fan-wrap">
-      <!-- Fan group 1: stone house job -->
       <div class="fan-group">
-        <div class="fan-card"><img src="before-after1-before.jpeg" alt="Stone house before" /></div>
+        <div class="fan-card"><img src="stock4.png" alt="R&R Roofing team" /></div>
         <div class="fan-card"><img src="stock3.png" alt="R&R Roofing on site" /></div>
-        <div class="fan-card"><img src="before-after1-after.jpeg" alt="Stone house after new roof" /></div>
+        <div class="fan-card"><img src="stock1.png" alt="R&R Roofing on the job" /></div>
       </div>
-      <!-- Fan group 2: brick house job -->
-      <div class="fan-group">
-        <div class="fan-card"><img src="before-after2-before.jpeg" alt="Brick house before" /></div>
-        <div class="fan-card"><img src="stock1.png" alt="Roofer on the job" /></div>
-        <div class="fan-card"><img src="before-after2-after.jpeg" alt="Brick house after new roof" /></div>
+    </div>
+  </section>
+
+  <!-- OUR WORK -->
+  <section class="work-section">
+    <div class="work-inner">
+      <div class="panel-label">Our Work</div>
+      <h2 class="panel-head">Before &amp; After</h2>
+      <div class="work-grid">
+        <div class="work-pair">
+          <div class="work-photo">
+            <img src="before-after1-after.jpeg" alt="Stone house — before" />
+            <span class="work-label work-label-before">Before</span>
+          </div>
+          <div class="work-photo">
+            <img src="before-after1-before.jpeg" alt="Stone house — after" />
+            <span class="work-label work-label-after">After</span>
+          </div>
+        </div>
+        <div class="work-pair">
+          <div class="work-photo">
+            <img src="before-after2-before.jpeg" alt="Brick house — before" />
+            <span class="work-label work-label-before">Before</span>
+          </div>
+          <div class="work-photo">
+            <img src="before-after2-after.jpeg" alt="Brick house — after" />
+            <span class="work-label work-label-after">After</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -984,9 +1060,23 @@
 <script>
 // Rotating headline text
 (function(){
-  const words = ['Everything.','Your Claim.','The Inspection.','All Paperwork.','Installation.'];
+  const words = ['Everything', 'Claims', 'Inspection', 'Paperwork', 'Installation'];
   const el = document.getElementById('text-rotate');
   let idx = 0;
+
+  function calibrate() {
+    const probe = document.createElement('span');
+    probe.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;font-weight:800;letter-spacing:-.04em;padding:0.05em 0.35em 0.1em;border-radius:999px;';
+    el.parentNode.insertBefore(probe, el);
+    let maxW = 0;
+    words.forEach(w => { probe.textContent = w; maxW = Math.max(maxW, probe.offsetWidth); });
+    probe.remove();
+    el.style.minWidth = maxW + 'px';
+  }
+  calibrate();
+  window.addEventListener('resize', calibrate);
+  if (document.fonts) document.fonts.ready.then(calibrate);
+
   function chars(str) {
     if (typeof Intl !== 'undefined' && 'Segmenter' in Intl)
       return [...new Intl.Segmenter('en',{granularity:'grapheme'}).segment(str)].map(s=>s.segment);
@@ -994,21 +1084,21 @@
   }
   function show(word) {
     const current = [...el.children];
-    current.forEach((c,i) => { c.classList.add('exit'); c.style.animationDelay = i*0.022+'s'; });
-    const wait = current.length ? 280 + current.length*22 : 0;
+    current.forEach((c,i) => { c.classList.add('exit'); c.style.animationDelay = i*0.012+'s'; });
+    const wait = current.length ? 150 + current.length*12 : 0;
     setTimeout(() => {
       el.innerHTML = '';
       chars(word).forEach((ch,i) => {
         const s = document.createElement('span');
         s.className = 'tr-char';
         s.textContent = ch;
-        s.style.animationDelay = i*0.038+'s';
+        s.style.animationDelay = i*0.022+'s';
         el.appendChild(s);
       });
     }, wait);
   }
   show(words[0]);
-  setInterval(() => { idx = (idx+1)%words.length; show(words[idx]); }, 2800);
+  setInterval(() => { idx = (idx+1)%words.length; show(words[idx]); }, 1500);
 })();
 
 // Fan animation — trigger after short delay so layout is settled
