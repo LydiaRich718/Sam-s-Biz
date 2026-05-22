@@ -169,10 +169,10 @@
 
     /* ── HERO ── */
     .hero {
-      position: relative; width: 100%; min-height: 100vh;
+      position: relative; width: 100%;
       background: #ffffff; overflow: hidden;
       display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-      padding: 80px 0 40px;
+      padding: 80px 0 0;
     }
     #webgl-canvas {
       position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; display: block;
@@ -274,7 +274,7 @@
     .btn-secondary:active { transform: scale(0.96); }
 
     /* collage */
-    .collage { position: relative; z-index: 0; margin-top: 52px; flex: 1; width: 100%; display: flex; align-items: flex-start; justify-content: center; min-height: 680px; }
+    .collage { position: relative; z-index: 0; margin-top: 52px; flex: 1; width: 100%; display: flex; align-items: flex-start; justify-content: center; min-height: 680px; margin-bottom: 0; }
     .collage-inner { position: relative; width: 100%; max-width: 1200px; height: 680px; }
     .collage img { position: absolute; border-radius: 16px; object-fit: cover; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.18); z-index: 2; }
     .ci0 { width: 310px; height: 220px; left:50%; top:50%; transform:translate(-50%,-50%); z-index:20; animation:float-up 6s ease-in-out infinite; animation-delay:0s; }
@@ -291,19 +291,100 @@
     /* ── PANEL CONTENT ── */
     /* services */
     .p-grid-4 { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
-    .p-card {
-      background: var(--bg-subtle); border: 1.5px solid var(--border); border-radius: 16px; padding: 28px 24px;
-      transition: border-color .2s, transform .2s, box-shadow .2s;
+    /* ── FLIP CARDS ── */
+    @property --border-angle {
+      syntax: '<angle>';
+      inherits: false;
+      initial-value: 0deg;
     }
-    .p-card:hover { border-color: #fca5a5; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(220,38,38,.07); }
+    @keyframes silver-spin {
+      to { --border-angle: 360deg; }
+    }
+    .p-card {
+      position: relative;
+      border-radius: 16px;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      isolation: isolate;
+      min-height: 190px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+    /* silver streak behind card */
+    .p-card::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 22px;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity .5s ease;
+      filter: blur(7px);
+      background: conic-gradient(
+        from var(--border-angle) at 50% 50%,
+        transparent 0%,
+        transparent 25%,
+        #4a5060 35%,
+        #9ba3af 42%,
+        #d4d8de 46%,
+        #eef0f3 48%,
+        #ffffff 50%,
+        #eef0f3 52%,
+        #d4d8de 54%,
+        #9ba3af 58%,
+        #4a5060 65%,
+        transparent 75%,
+        transparent 100%
+      );
+    }
+    .p-card:hover::before {
+      opacity: 1;
+      animation: silver-spin 5s linear infinite;
+    }
+    /* the flipping inner wrapper */
+    .p-card-inner {
+      position: relative;
+      width: 100%; height: 100%; min-height: 190px;
+      transform-style: preserve-3d;
+      transition: transform .7s cubic-bezier(.4,0,.2,1);
+      z-index: 1;
+    }
+    .p-card:hover .p-card-inner {
+      transform: rotateY(180deg);
+    }
+    .p-card-front, .p-card-back {
+      position: absolute; inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 16px;
+      padding: 28px 24px;
+      display: flex; flex-direction: column; justify-content: flex-start;
+    }
+    .p-card-front {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .p-card-back {
+      background: linear-gradient(135deg, #0f172a 0%, #1c1f2e 100%);
+      border: 1.5px solid rgba(220,38,38,0.3);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      transform: rotateY(180deg);
+      justify-content: center;
+    }
+    .p-card-back h4 { font-size: 14px; font-weight: 700; color: #f87171; margin-bottom: 10px; letter-spacing: .04em; text-transform: uppercase; }
+    .p-card-back p  { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.75; }
+    .p-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 7px; color: var(--fg); }
+    .p-card-front p { font-size: 13px; color: var(--fg-muted); line-height: 1.7; }
     .p-icon { width:40px; height:40px; margin-bottom:14px; display:block; color:var(--red); }
     .p-icon svg { width:100%; height:100%; stroke:currentColor; fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
     .p-brand-icon { width:36px; height:36px; margin:0 auto 10px; color:var(--red); }
     .p-brand-icon svg { width:100%; height:100%; stroke:currentColor; fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
     .contact-icon { width:36px; height:36px; margin:0 auto 14px; color:var(--red); }
     .contact-icon svg { width:100%; height:100%; stroke:currentColor; fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
-    .p-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 7px; }
-    .p-card p { font-size: 13px; color: var(--fg-muted); line-height: 1.7; }
+    .p-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 7px; color: var(--fg); }
+    .p-card p  { font-size: 13px; color: var(--fg-muted); line-height: 1.7; }
 
     /* process steps */
     .p-steps { display: grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap: 14px; }
@@ -370,7 +451,7 @@
     .form-note { font-size:11px; color:var(--fg-muted); text-align:center; margin-top:10px; }
 
     /* ── FOOTER ── */
-    footer { background: #f8fafc; border-top: 1px solid var(--border); padding: 72px 32px 0; }
+    footer { background: #f8fafc; padding: 72px 32px 0; }
     .foot-inner {
       max-width: 1100px; margin: 0 auto;
       display: flex; flex-wrap: wrap; gap: 48px; justify-content: space-between;
@@ -394,7 +475,6 @@
     .foot-col a:hover { color: var(--red); }
     .foot-bottom {
       max-width: 1100px; margin: 0 auto;
-      border-top: 1px solid var(--border);
       padding: 24px 0 32px;
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
     }
@@ -414,15 +494,80 @@
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+    /* ── TABLET ── */
+    @media(max-width:900px){
+      .pill-menu { gap:6px; }
+      .pill-btn { height:38px; padding:0 14px; font-size:12px; }
+      .collage-inner { height:500px; }
+      .ci7,.ci8 { display:none; }
+      .foot-cols { grid-template-columns: repeat(2,1fr); }
+    }
+
+    /* ── MOBILE ── */
     @media(max-width:640px){
-      nav { padding:12px 16px; }
-      .pill-btn span:not(.pill-arrow) { display:none; }
-      .pill-btn { padding: 0 14px; }
-      .collage-inner { height:320px; }
+      /* nav — scrollable pill row */
+      nav { padding:10px 12px; flex-wrap:nowrap; gap:8px; }
+      .nav-logo-text { font-size:15px; }
+      .pill-menu { gap:5px; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:2px; flex-wrap:nowrap; }
+      .pill-menu::-webkit-scrollbar { display:none; }
+      .pill-btn { height:36px; padding:0 12px; font-size:11px; flex-shrink:0; }
+
+      /* hero */
+      .hero { padding:72px 0 32px; }
+      .hero-logo img { width:min(280px,78vw); }
+      .hero h1 { font-size:clamp(32px,9vw,48px); }
+      .hero-sub { font-size:14px; }
+      .hero-ctas { flex-direction:column; align-items:center; gap:10px; }
+      .btn-primary, .btn-secondary { width:100%; max-width:320px; text-align:center; justify-content:center; }
+
+      /* collage */
+      .collage { margin-top:28px; min-height:260px; }
+      .collage-inner { height:260px; }
       .ci1,.ci2,.ci4,.ci6,.ci7,.ci8 { display:none; }
-      .ci0{width:190px;height:145px;}
-      .ci3,.ci5{width:145px;height:108px;}
-      footer { display:none; }
+      .ci0 { width:200px; height:148px; }
+      .ci3 { width:150px; height:112px; right:3%; bottom:6%; }
+      .ci5 { width:150px; height:112px; left:3%; bottom:6%; }
+
+      /* panels */
+      .panel { top:58px; max-height:calc(100vh - 58px); }
+      .panel-inner { padding:28px 16px 40px; }
+      .panel-head { font-size:clamp(22px,6vw,32px); }
+
+      /* all grids → single column */
+      [style*="grid-template-columns:repeat(3"] { display:grid; grid-template-columns:1fr !important; }
+      [style*="grid-template-columns:repeat(2"] { display:grid; grid-template-columns:1fr !important; }
+      .p-grid-4 { grid-template-columns:1fr !important; }
+      .p-grid-2x2 { grid-template-columns:1fr !important; }
+      .p-grid-3 { grid-template-columns:1fr !important; }
+      .p-steps { grid-template-columns:1fr 1fr !important; }
+
+      /* contact cards stack */
+      [style*="grid-template-columns:repeat(3,1fr)"] { grid-template-columns:1fr !important; }
+
+      /* owner banner */
+      .p-owner { flex-direction:column; gap:16px; }
+      .p-owner-links { flex-direction:row; flex-wrap:wrap; }
+
+      /* brands */
+      .p-brands { grid-template-columns:1fr 1fr !important; }
+
+      /* modal */
+      .modal { border-radius:16px; }
+      .modal-body { padding:16px 20px 28px; }
+
+      /* footer — simplified */
+      footer { padding:40px 16px 0; }
+      .foot-inner { flex-direction:column; gap:28px; }
+      .foot-cols { grid-template-columns:1fr 1fr; gap:20px; }
+      .foot-left { max-width:100%; }
+      .foot-bottom { flex-direction:column; gap:8px; text-align:center; }
+    }
+
+    /* ── VERY SMALL ── */
+    @media(max-width:380px){
+      .pill-btn { height:32px; padding:0 9px; font-size:10px; }
+      .hero-logo img { width:72vw; }
+      .foot-cols { grid-template-columns:1fr; }
     }
   </style>
 </head>
@@ -453,13 +598,13 @@
     <div class="panel-label">What We Do</div>
     <h2 class="panel-head">Full-Service Roofing</h2>
     <p class="panel-sub">Residential and commercial — inspection through install, all in-house.</p>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
-      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/><path d="M3 12v9h18v-9"/><path d="M12 3l-2 2M8 7l-1 1M16 7l1 1"/><circle cx="12" cy="8" r="1" fill="currentColor"/></svg></span><h3>Storm Damage Repair</h3><p>Hail, wind, fallen trees — we document everything for your insurer and get repairs moving fast.</p></div>
-      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></span><h3>Full Roof Replacement</h3><p>Complete tear-off and re-roof with premium shingles backed by a manufacturer warranty.</p></div>
-      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></span><h3>Insurance Claim Help</h3><p>We document damage, meet the adjuster, and make sure every line item is covered.</p></div>
-      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></span><h3>Free Roof Inspection</h3><p>Not sure if you have damage? We check — no charge, no pressure, no obligation.</p></div>
-      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7"/><path d="M4 10v10h16V10"/><path d="M4 20c0-2 2-3 4-2s4 1 4-1 2-3 4-2 4 1 4 1"/><path d="M8 10v4"/></svg></span><h3>Gutters &amp; Flashing</h3><p>Damaged gutters cause water intrusion. We inspect and replace as part of every project.</p></div>
-      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><path d="M12 12v4M10 14h4"/></svg></span><h3>Commercial Roofing</h3><p>Flat roofs, TPO, EPDM, and metal systems for commercial properties across PA and NJ.</p></div>
+    <div class="p-grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+      <div class="p-card"><div class="p-card-inner"><div class="p-card-front"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/><path d="M3 12v9h18v-9"/><path d="M12 3l-2 2M8 7l-1 1M16 7l1 1"/><circle cx="12" cy="8" r="1" fill="currentColor"/></svg></span><h3>Storm Damage Repair</h3><p>Hail, wind, fallen trees — we document everything for your insurer and get repairs moving fast.</p></div><div class="p-card-back"><h4>Storm Damage</h4><p>We photograph every inch of damage, write a detailed report, and hand it directly to your adjuster — so nothing gets missed and your claim is as strong as possible.</p></div></div></div>
+      <div class="p-card"><div class="p-card-inner"><div class="p-card-front"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></span><h3>Full Roof Replacement</h3><p>Complete tear-off and re-roof with premium shingles backed by a manufacturer warranty.</p></div><div class="p-card-back"><h4>Full Replacement</h4><p>Tear-off down to the deck, new underlayment, ice barrier, and premium shingles installed. Most residential roofs are completed in a single day by our crew.</p></div></div></div>
+      <div class="p-card"><div class="p-card-inner"><div class="p-card-front"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></span><h3>Insurance Claim Help</h3><p>We document damage, meet the adjuster, and make sure every line item is covered.</p></div><div class="p-card-back"><h4>Claim Assistance</h4><p>We've worked with every major carrier. Our team attends the adjuster meeting on-site and advocates for every line item — most homeowners only pay their deductible.</p></div></div></div>
+      <div class="p-card"><div class="p-card-inner"><div class="p-card-front"><span class="p-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></span><h3>Free Roof Inspection</h3><p>Not sure if you have damage? We check — no charge, no pressure, no obligation.</p></div><div class="p-card-back"><h4>Free Inspection</h4><p>No obligation whatsoever. We climb up, check every inch of your roof, and give you an honest assessment — whether you end up hiring us or not.</p></div></div></div>
+      <div class="p-card"><div class="p-card-inner"><div class="p-card-front"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7"/><path d="M4 10v10h16V10"/><path d="M4 20c0-2 2-3 4-2s4 1 4-1 2-3 4-2 4 1 4 1"/><path d="M8 10v4"/></svg></span><h3>Gutters &amp; Flashing</h3><p>Damaged gutters cause water intrusion. We inspect and replace as part of every project.</p></div><div class="p-card-back"><h4>Gutters &amp; Flashing</h4><p>Gutters and flashing are the #1 cause of hidden water damage. We inspect and replace them on every job — and document it all for your insurance claim.</p></div></div></div>
+      <div class="p-card"><div class="p-card-inner"><div class="p-card-front"><span class="p-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><path d="M12 12v4M10 14h4"/></svg></span><h3>Commercial Roofing</h3><p>Flat roofs, TPO, EPDM, and metal systems for commercial properties across PA and NJ.</p></div><div class="p-card-back"><h4>Commercial</h4><p>We handle flat roofs, TPO, EPDM, and standing seam metal systems for commercial properties of all sizes across PA and NJ.</p></div></div></div>
     </div>
     <div style="margin-top:28px;">
       <div class="panel-label" style="margin-bottom:14px;">Materials We Install</div>
@@ -498,10 +643,10 @@
     <h2 class="panel-head">We Fight for Every Dollar<br/>Your Insurance Owes You.</h2>
     <p class="panel-sub">Most contractors hand you an estimate and walk away. We stay in your corner the whole way.</p>
     <div class="p-grid-2x2" style="margin-bottom:14px;">
-      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span><h3>All Major Carriers</h3><p>State Farm, Allstate, USAA, Liberty Mutual — we know the process for every major insurer.</p></div>
-      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></span><h3>Full Claim Guidance</h3><p>We walk you through filing, meet the adjuster on-site, and advocate for the full scope of damage.</p></div>
-      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span><h3>Supplement Specialists</h3><p>Find more damage mid-job? We go back to your insurer for additional funds — no cost to you.</p></div>
-      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><h3>1-Year Workmanship Warranty</h3><p>Plus manufacturer warranty on Owens Corning, GAF, and CertainTeed shingles on every job.</p></div>
+      <div class="p-card"><div class="p-card-inner"><div class="p-card-front"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span><h3>All Major Carriers</h3><p>State Farm, Allstate, USAA, Liberty Mutual — we know the process for every major insurer.</p></div><div class="p-card-back"><h4>All Carriers</h4><p>State Farm, Allstate, USAA, Liberty Mutual, Travelers, and more. We know every carrier's process and speak their language — so your claim moves faster.</p></div></div></div>
+      <div class="p-card"><div class="p-card-inner"><div class="p-card-front"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></span><h3>Full Claim Guidance</h3><p>We walk you through filing, meet the adjuster on-site, and advocate for the full scope of damage.</p></div><div class="p-card-back"><h4>Claim Guidance</h4><p>We handle every step — from filing to the adjuster meeting to final approval. You don't lift a finger. We make sure the full scope of damage is on record.</p></div></div></div>
+      <div class="p-card"><div class="p-card-inner"><div class="p-card-front"><span class="p-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span><h3>Supplement Specialists</h3><p>Find more damage mid-job? We go back to your insurer for additional funds — no cost to you.</p></div><div class="p-card-back"><h4>Supplements</h4><p>If we uncover more damage once work begins, we go back to your insurer for a supplement. You never pay out of pocket for damage your insurance should cover.</p></div></div></div>
+      <div class="p-card"><div class="p-card-inner"><div class="p-card-front"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><h3>1-Year Workmanship Warranty</h3><p>Plus manufacturer warranty on Owens Corning, GAF, and CertainTeed shingles on every job.</p></div><div class="p-card-back"><h4>Warranty</h4><p>Every job includes our 1-year workmanship warranty plus the full manufacturer warranty from Owens Corning, GAF, or CertainTeed — whichever shingle you choose.</p></div></div></div>
     </div>
     <div class="p-owner">
       <div><h3>You work directly with the owners.</h3><p>No middlemen. When you call R&amp;R, you get Sam — from the first inspection to the final walkthrough.</p></div>
@@ -533,13 +678,13 @@
     <div class="panel-label">Q&amp;A</div>
     <h2 class="panel-head">Common Questions</h2>
     <p class="panel-sub">Answers to what most homeowners ask us first.</p>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
-      <div class="p-card"><h3>Does insurance cover storm damage?</h3><p>Many homeowner policies cover wind and hail damage when enough storm-related damage is found during inspection.</p></div>
-      <div class="p-card"><h3>Will my rates go up if I file a claim?</h3><p>Storm claims are often treated differently than at-fault claims — but it depends on your carrier and policy. We'll help you understand your options.</p></div>
-      <div class="p-card"><h3>How long does a replacement take?</h3><p>Most residential roofs are completed in a single day, depending on size and weather.</p></div>
-      <div class="p-card"><h3>What does it actually cost me?</h3><p>Most homeowners only pay their deductible. Insurance typically covers the full cost of the roof — we'll walk you through exactly what to expect.</p></div>
-      <div class="p-card"><h3>How do I know if I have damage?</h3><p>Missing shingles, leaks, lifted tabs, or granule loss are common signs — but some damage is only visible during a professional inspection. We'll check for free.</p></div>
-      <div class="p-card"><h3>What if my claim gets denied?</h3><p>We're experienced with appeals and supplements. If damage was missed or underpaid, we go back to your insurer on your behalf.</p></div>
+    <div class="p-grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+      <div class="p-card"><div class="p-card-inner"><div class="p-card-front" style="justify-content:center;"><h3>Does insurance cover storm damage?</h3><p style="margin-top:8px;">Tap to find out →</p></div><div class="p-card-back"><h4>The Answer</h4><p>Most homeowner policies cover wind and hail damage. If enough storm-related damage is found during inspection, your insurer is typically required to pay for a full replacement.</p></div></div></div>
+      <div class="p-card"><div class="p-card-inner"><div class="p-card-front" style="justify-content:center;"><h3>Will my rates go up?</h3><p style="margin-top:8px;">Tap to find out →</p></div><div class="p-card-back"><h4>The Answer</h4><p>Storm damage claims are typically treated as "act of God" — different from at-fault claims. Rate impacts vary by carrier and state, but many homeowners see no increase at all.</p></div></div></div>
+      <div class="p-card"><div class="p-card-inner"><div class="p-card-front" style="justify-content:center;"><h3>How long does a replacement take?</h3><p style="margin-top:8px;">Tap to find out →</p></div><div class="p-card-back"><h4>The Answer</h4><p>Most residential roofs are completed in a single day. Larger or more complex roofs may take two. We'll give you a clear timeline before we start.</p></div></div></div>
+      <div class="p-card"><div class="p-card-inner"><div class="p-card-front" style="justify-content:center;"><h3>What does it cost me?</h3><p style="margin-top:8px;">Tap to find out →</p></div><div class="p-card-back"><h4>The Answer</h4><p>Most homeowners only pay their deductible — often $500–$1,500. Insurance covers the rest. We'll walk you through what to expect before anything is signed.</p></div></div></div>
+      <div class="p-card"><div class="p-card-inner"><div class="p-card-front" style="justify-content:center;"><h3>How do I know if I have damage?</h3><p style="margin-top:8px;">Tap to find out →</p></div><div class="p-card-back"><h4>The Answer</h4><p>Missing shingles, granule loss, dents on vents, or water stains inside are common signs. Some damage is invisible from the ground — that's why we inspect for free.</p></div></div></div>
+      <div class="p-card"><div class="p-card-inner"><div class="p-card-front" style="justify-content:center;"><h3>What if my claim gets denied?</h3><p style="margin-top:8px;">Tap to find out →</p></div><div class="p-card-back"><h4>The Answer</h4><p>We fight it. We're experienced with appeals and supplements — if damage was missed or underpaid, we go back to your insurer on your behalf at no extra cost.</p></div></div></div>
     </div>
   </div>
 </div>
@@ -550,7 +695,7 @@
     <div class="panel-label">Contact</div>
     <h2 class="panel-head">Get in Touch</h2>
     <p class="panel-sub">Reach us directly — we're the owners, so you'll always talk to someone who knows your job.</p>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px;">
+    <div class="p-grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px;">
       <a href="tel:4846350750" class="p-card" data-copy="(484) 635-0750" data-copy-label="Phone number copied!" style="text-align:center;text-decoration:none;display:block;cursor:pointer;">
         <div class="contact-icon"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.17 3.2 2 2 0 012.16 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
         <h3 style="margin-bottom:8px;">Call or Text</h3>
@@ -884,6 +1029,7 @@ void main(){vec2 st=coord(gl_FragCoord.xy);vec2 mouse=coord(u_mouse*u_pixelRatio
 <div class="toast" id="toast"></div>
 
 <script>
+
 document.querySelectorAll('[data-copy]').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
