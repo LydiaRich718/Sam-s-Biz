@@ -423,8 +423,6 @@
     .p-card p  { font-size: 13px; color: var(--fg-muted); line-height: 1.7; }
 
     /* ── INSURANCE TIMELINE ── */
-    .ins-head { font-size:clamp(22px,3.2vw,36px); font-weight:800; letter-spacing:-.04em; color:var(--fg); margin-bottom:12px; line-height:1.2; }
-    .ins-sub { font-size:15px; color:var(--fg-muted); line-height:1.75; max-width:620px; margin-bottom:52px; }
     .ins-timeline { position:relative; display:flex; align-items:flex-start; margin-bottom:44px; }
     .ins-timeline::before { content:''; position:absolute; top:15px; left:0; right:0; height:1px; background:linear-gradient(to right, transparent 8.5%, var(--border) 8.5%, var(--border) 91.5%, transparent 91.5%); z-index:0; pointer-events:none; }
     .ins-step { flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 12px; position:relative; z-index:1; cursor:default; transition:transform .3s cubic-bezier(.25,.46,.45,.94); }
@@ -440,7 +438,6 @@
     .ins-callout p { font-size:13.5px; color:var(--fg-muted); line-height:1.7; margin:0; }
 
     /* why */
-    .p-grid-2x2 { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:14px; }
     .p-owner {
       background: var(--red); border-radius: 16px; padding: 28px 32px;
       display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
@@ -809,8 +806,8 @@
   <div class="panel-inner">
     <button class="panel-back-btn" onclick="closePanel()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back to Home</button>
     <div class="panel-label">Insurance Restoration</div>
-    <h2 class="ins-head">From Inspection to Insurance Approval</h2>
-    <p class="ins-sub">Insurance claims can feel overwhelming. We help document the damage, meet with the adjuster, and guide you through the process from inspection to final installation.</p>
+    <h2 class="panel-head">From Inspection to Approval</h2>
+    <p class="panel-sub" style="margin-bottom:52px;">Insurance claims can feel overwhelming. We document the damage, meet with your adjuster, and guide you through every step.</p>
     <div class="ins-timeline">
       <div class="ins-step">
         <div class="ins-num">01</div>
@@ -865,6 +862,8 @@
   <div class="panel-inner">
     <button class="panel-back-btn" onclick="closePanel()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back to Home</button>
     <div class="panel-label">Why R&amp;R</div>
+    <h2 class="panel-head">The Full-Service Difference</h2>
+    <p class="panel-sub">One team. One call. We inspect your roof, fight your claim, and install your new roof — you just pay your deductible.</p>
     <div class="tg-hero">
       <div class="tg-trio">
         <div class="tg-item">
@@ -874,7 +873,7 @@
         <div class="tg-divider"></div>
         <div class="tg-item">
           <span class="tg-w" data-w="Advocate."><span class="tg-fg tg-fg2">Advocate.</span></span>
-          <p class="tg-desc">We meet your adjuster on-site and fight for every line item. Most homeowners only pay their deductible.</p>
+          <p class="tg-desc">We meet your adjuster on-site and fight for every line item on your claim.</p>
         </div>
         <div class="tg-divider"></div>
         <div class="tg-item">
@@ -883,13 +882,7 @@
         </div>
       </div>
     </div>
-    <div class="p-grid-2x2" style="margin-bottom:14px;">
-      <div class="p-card"><div class="p-card-inner"><div class="p-card-front"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span><h3>All Major Carriers</h3><p>State Farm, Allstate, USAA, Liberty Mutual — we know the process for every major insurer.</p></div><div class="p-card-back"><h4>All Carriers</h4><p>State Farm, Allstate, USAA, Liberty Mutual, Travelers, and more. We know every carrier's process and speak their language — so your claim moves faster.</p></div></div></div>
-      <div class="p-card"><div class="p-card-inner"><div class="p-card-front"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></span><h3>Full Claim Guidance</h3><p>We walk you through filing, meet the adjuster on-site, and advocate for the full scope of damage.</p></div><div class="p-card-back"><h4>Claim Guidance</h4><p>We handle every step — from filing to the adjuster meeting to final approval. You don't lift a finger. We make sure the full scope of damage is on record.</p></div></div></div>
-      <div class="p-card"><div class="p-card-inner"><div class="p-card-front"><span class="p-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span><h3>Supplement Specialists</h3><p>Find more damage mid-job? We go back to your insurer for additional funds — no cost to you.</p></div><div class="p-card-back"><h4>Supplements</h4><p>If we uncover more damage once work begins, we go back to your insurer for a supplement. You never pay out of pocket for damage your insurance should cover.</p></div></div></div>
-      <div class="p-card"><div class="p-card-inner"><div class="p-card-front"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><h3>1-Year Workmanship Warranty</h3><p>Plus manufacturer warranty on Owens Corning, GAF, and CertainTeed shingles on every job.</p></div><div class="p-card-back"><h4>Warranty</h4><p>Every job includes our 1-year workmanship warranty plus the full manufacturer warranty from Owens Corning, GAF, or CertainTeed — whichever shingle you choose.</p></div></div></div>
-    </div>
-    <div class="p-owner">
+    <div class="p-owner" style="margin-top:20px;">
       <div><h3>You work directly with the owners.</h3><p>No middlemen. When you call R&amp;R, you get Sam or Henry — from the first inspection to the final walkthrough.</p></div>
       <div class="p-owner-links">
         <a href="tel:4846350750">Sam — (484) 635-0750</a>
