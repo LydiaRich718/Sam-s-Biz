@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>R&R Roofing — Storm Damage &amp; Roof Restoration</title>
+  <meta name="description" content="R&R Roofing — Greater Philadelphia storm damage experts. Free inspection, full insurance claim assistance, final install." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #ffffff;
+      --bg-subtle: #f8fafc;
+      --border: #e2e8f0;
+      --fg: #0f172a;
+      --fg-muted: #64748b;
+      --fg-mid: #475569;
+      --red: #dc2626;
+      --red-light: #fef2f2;
+      --red-dark: #b91c1c;
+    }
+    html, body { height: 100%; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--fg); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes float-up {
+      0%,100% { transform: translateY(0px);   box-shadow: 0 25px 50px -12px rgba(0,0,0,0.18); }
+      50%      { transform: translateY(-15px); box-shadow: 0 35px 60px -15px rgba(0,0,0,0.22); }
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(22px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes panelIn {
+      from { opacity:0; transform:translateY(-12px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes drawerIn {
+      from { transform: translateX(100%); }
+      to   { transform: translateX(0); }
+    }
+    .fade-up { opacity:0; animation: fadeUp .8s cubic-bezier(.25,.4,.25,1) forwards; }
+    .d1{animation-delay:.1s} .d2{animation-delay:.25s} .d3{animation-delay:.4s} .d4{animation-delay:.55s}
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      padding: 14px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(255,255,255,0.88); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: border-color .3s, background .3s;
+    }
+    nav.panel-open { border-color: var(--border); background: rgba(255,255,255,0.98); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo img { height: 36px; width: auto; display: block; }
+    .nav-logo-text { font-size: 18px; font-weight: 800; letter-spacing: -.02em; color: var(--fg); line-height: 1; }
+    .nav-logo-text span { color: var(--red); }
+
+    /* hero logo spotlight */
+    .hero-logo { margin-bottom: 16px; }
+    .hero-logo img { width: min(400px, 72vw); height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 6px 20px rgba(220,38,38,0.15)); }
+
+    /* pill menu */
+    .pill-menu { display: flex; align-items: center; gap: 8px; list-style: none; }
+    .pill-btn {
+      position: relative; overflow: hidden;
+      height: 42px; padding: 0 20px;
+      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.7) 0%, rgba(240,242,246,0.9) 60%), #f1f3f7;
+      border: 1px solid rgba(0,0,0,0.1);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9);
+      border-radius: 999px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-family: inherit;
+      font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+      color: var(--fg-mid);
+      white-space: nowrap; text-decoration: none;
+      animation: shine-sweep 3s 1s cubic-bezier(.4,0,.2,1) infinite;
+      transition: box-shadow .2s, transform .15s, color .2s;
+    }
+    .pill-btn::after {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; z-index: 1;
+      background: linear-gradient(-75deg,
+        rgba(255,255,255,0.05) calc(var(--shine-x) + 20%),
+        rgba(255,255,255,0.55) calc(var(--shine-x) + 25%),
+        rgba(255,255,255,0.05) calc(var(--shine-x) + 100%)
+      );
+      padding: 1px;
+      -webkit-mask: linear-gradient(#fff,#fff) content-box, linear-gradient(#fff,#fff);
+      mask: linear-gradient(#fff,#fff) content-box, linear-gradient(#fff,#fff);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+      pointer-events: none;
+    }
+    .pill-btn span { position: relative; z-index: 2; }
+    .pill-btn:hover {
+      box-shadow: 0 4px 14px rgba(0,0,0,0.13), inset 0 1px 0 rgba(255,255,255,0.9);
+      color: var(--fg);
+    }
+    .pill-btn:active { transform: scale(0.96); }
+    .pill-btn.active { border-color: var(--red); color: var(--red); box-shadow: 0 2px 10px rgba(220,38,38,0.18); }
+    .pill-cta {
+      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.15) 0%, transparent 60%), var(--red) !important;
+      border-color: rgba(220,38,38,0.4) !important;
+      color: #fff !important;
+      box-shadow: 0 4px 14px rgba(220,38,38,0.32) !important;
+      animation: shine-sweep 2.5s 0.5s cubic-bezier(.4,0,.2,1) infinite !important;
+    }
+    .pill-cta:hover { box-shadow: 0 6px 20px rgba(220,38,38,0.45) !important; color: #fff !important; }
+
+    /* ── PANEL OVERLAY ── */
+    .panel-overlay {
+      position: fixed; inset: 0; z-index: 150;
+      background: rgba(15,23,42,0.3);
+      backdrop-filter: blur(2px);
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s;
+    }
+    .panel-overlay.visible { opacity: 1; pointer-events: all; }
+
+    /* ── SLIDE PANEL ── */
+    .panel {
+      position: fixed; top: 69px; left: 0; right: 0; z-index: 180;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 20px 60px -10px rgba(0,0,0,0.15);
+      max-height: calc(100vh - 69px);
+      overflow-y: auto;
+      opacity: 0; transform: translateY(-12px); pointer-events: none;
+      transition: opacity .3s, transform .3s;
+    }
+    .panel.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+    .panel-inner { max-width: 1100px; margin: 0 auto; padding: 48px 32px 56px; }
+    .panel-label { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--red); margin-bottom: 10px; }
+    .panel-head { font-size: clamp(26px,3.5vw,40px); font-weight: 800; letter-spacing: -.04em; color: var(--fg); margin-bottom: 10px; }
+    .panel-sub { font-size: 15px; color: var(--fg-muted); line-height: 1.7; margin-bottom: 36px; }
+
+    /* ── ESTIMATE MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 300;
+      background: rgba(15,23,42,0.45); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+      opacity: 0; pointer-events: none; transition: opacity .3s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: #fff; border-radius: 22px;
+      width: 100%; max-width: 540px;
+      max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.22);
+      transform: scale(0.96) translateY(10px);
+      transition: transform .3s cubic-bezier(.4,0,.2,1);
+    }
+    .modal-overlay.open .modal { transform: scale(1) translateY(0); }
+    .modal-head {
+      padding: 26px 28px 0;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-head h2 { font-size: 22px; font-weight: 800; letter-spacing: -.03em; }
+    .modal-close {
+      width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--border);
+      background: #fff; cursor: pointer; font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s; flex-shrink: 0;
+    }
+    .modal-close:hover { background: var(--bg-subtle); }
+    .modal-body { padding: 20px 28px 32px; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; width: 100%; min-height: 100vh;
+      background: #ffffff; overflow: hidden;
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+      padding: 80px 0 40px;
+    }
+    #webgl-canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; display: block;
+    }
+    .hero-text { position: relative; z-index: 10; max-width: 1100px; width: 100%; padding: 0 24px; text-align: center; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(220,38,38,0.07); color: var(--red);
+      border: 1px solid rgba(220,38,38,0.18);
+      font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 999px; margin-bottom: 12px;
+    }
+    .hero-badge span { width: 6px; height: 6px; border-radius: 50%; background: var(--red); }
+    .hero h1 {
+      font-size: clamp(42px, 6.5vw, 76px); font-weight: 800; letter-spacing: -.04em; line-height: 1.05;
+      color: var(--fg); margin-bottom: 18px;
+    }
+    .hero h1 em { font-style: normal; color: var(--red); }
+    .hero-sub { font-size: clamp(15px, 1.8vw, 18px); color: var(--fg-muted); line-height: 1.7; max-width: 480px; margin: 0 auto 28px; }
+    .hero-ctas { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    /* ── SHINY BUTTON ── */
+    @property --shine-x {
+      syntax: '<percentage>';
+      inherits: false;
+      initial-value: 100%;
+    }
+    @keyframes shine-sweep {
+      0%   { --shine-x: 100%; }
+      100% { --shine-x: -100%; }
+    }
+    @keyframes shine-in {
+      from { transform: scale(0.82); opacity: 0; }
+      to   { transform: scale(1);    opacity: 1; }
+    }
+    .btn-primary {
+      font-family: inherit; font-size: 14px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      padding: 13px 30px; border-radius: 10px; border: none;
+      position: relative; cursor: pointer; overflow: hidden;
+      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.12) 0%, transparent 60%), var(--red);
+      color: #fff; text-decoration: none;
+      box-shadow: 0 4px 14px rgba(220,38,38,.35);
+      transition: box-shadow .3s, transform .15s;
+      animation: shine-in .5s cubic-bezier(.34,1.56,.64,1) both, shine-sweep 2.5s 0.5s cubic-bezier(.4,0,.2,1) infinite;
+    }
+    .btn-primary:hover { box-shadow: 0 8px 24px rgba(220,38,38,.5); }
+    .btn-primary:active { transform: scale(0.96); }
+    /* shimmer text mask */
+    .btn-primary .shine-text {
+      position: relative; z-index: 2; display: block;
+      -webkit-mask-image: linear-gradient(-75deg,
+        rgba(255,255,255,1) calc(var(--shine-x) + 20%),
+        rgba(255,255,255,0.4) calc(var(--shine-x) + 30%),
+        rgba(255,255,255,1) calc(var(--shine-x) + 100%)
+      );
+      mask-image: linear-gradient(-75deg,
+        rgba(255,255,255,1) calc(var(--shine-x) + 20%),
+        rgba(255,255,255,0.4) calc(var(--shine-x) + 30%),
+        rgba(255,255,255,1) calc(var(--shine-x) + 100%)
+      );
+    }
+    /* shimmer border */
+    .btn-primary::after {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; z-index: 1;
+      background: linear-gradient(-75deg,
+        rgba(255,255,255,0.08) calc(var(--shine-x) + 20%),
+        rgba(255,255,255,0.45) calc(var(--shine-x) + 25%),
+        rgba(255,255,255,0.08) calc(var(--shine-x) + 100%)
+      );
+      padding: 1px;
+      -webkit-mask: linear-gradient(#fff,#fff) content-box, linear-gradient(#fff,#fff);
+      mask: linear-gradient(#fff,#fff) content-box, linear-gradient(#fff,#fff);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+    }
+    .btn-secondary {
+      font-family: inherit; font-size: 14px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      padding: 13px 30px; border-radius: 10px;
+      position: relative; overflow: hidden; cursor: pointer;
+      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.7) 0%, rgba(240,242,246,0.9) 60%), #f1f3f7;
+      border: 1px solid rgba(0,0,0,0.1);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9);
+      color: var(--fg-mid); text-decoration: none;
+      animation: shine-sweep 3s 1.5s cubic-bezier(.4,0,.2,1) infinite;
+      transition: box-shadow .2s, transform .15s, color .2s;
+    }
+    .btn-secondary::after {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; z-index: 1;
+      background: linear-gradient(-75deg,
+        rgba(255,255,255,0.05) calc(var(--shine-x) + 20%),
+        rgba(255,255,255,0.55) calc(var(--shine-x) + 25%),
+        rgba(255,255,255,0.05) calc(var(--shine-x) + 100%)
+      );
+      padding: 1px;
+      -webkit-mask: linear-gradient(#fff,#fff) content-box, linear-gradient(#fff,#fff);
+      mask: linear-gradient(#fff,#fff) content-box, linear-gradient(#fff,#fff);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+      pointer-events: none;
+    }
+    .btn-secondary .shine-text { position: relative; z-index: 2; }
+    .btn-secondary:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.13); color: var(--fg); }
+    .btn-secondary:active { transform: scale(0.96); }
+
+    /* collage */
+    .collage { position: relative; z-index: 0; margin-top: 52px; flex: 1; width: 100%; display: flex; align-items: flex-start; justify-content: center; min-height: 680px; }
+    .collage-inner { position: relative; width: 100%; max-width: 1200px; height: 680px; }
+    .collage img { position: absolute; border-radius: 16px; object-fit: cover; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.18); z-index: 2; }
+    .ci0 { width: 310px; height: 220px; left:50%; top:50%; transform:translate(-50%,-50%); z-index:20; animation:float-up 6s ease-in-out infinite; animation-delay:0s; }
+    .ci1 { width: 210px; height: 155px; left:2%;  top:5%;  z-index:10; animation:float-up 6s ease-in-out infinite; animation-delay:-1.2s; }
+    .ci2 { width: 200px; height: 148px; left:30%; top:3%;  z-index:10; animation:float-up 6s ease-in-out infinite; animation-delay:-2.5s; }
+    .ci3 { width: 215px; height: 158px; right:2%; top:5%;  z-index:10; animation:float-up 6s ease-in-out infinite; animation-delay:-3.5s; }
+    .ci4 { width: 200px; height: 150px; right:2%; bottom:5%; z-index:30; animation:float-up 6s ease-in-out infinite; animation-delay:-4.8s; }
+    .ci5 { width: 215px; height: 160px; left:30%; bottom:3%; z-index:30; animation:float-up 6s ease-in-out infinite; animation-delay:-5.2s; }
+    .ci6 { width: 205px; height: 152px; left:2%;  bottom:5%; z-index:30; animation:float-up 6s ease-in-out infinite; animation-delay:-6s; }
+    .ci7 { width: 195px; height: 148px; left:2%;  top:50%; transform:translateY(-50%); z-index:10; animation:float-up 6s ease-in-out infinite; animation-delay:-0.8s; }
+    .ci8 { width: 195px; height: 148px; right:2%; top:50%; transform:translateY(-50%); z-index:10; animation:float-up 6s ease-in-out infinite; animation-delay:-3.0s; }
+    .collage::after { content:''; position:absolute; bottom:0; left:0; right:0; height:60px; background:linear-gradient(to top,#ffffff,transparent); z-index:40; pointer-events:none; }
+
+    /* ── PANEL CONTENT ── */
+    /* services */
+    .p-grid-4 { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
+    .p-card {
+      background: var(--bg-subtle); border: 1.5px solid var(--border); border-radius: 16px; padding: 28px 24px;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+    }
+    .p-card:hover { border-color: #fca5a5; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(220,38,38,.07); }
+    .p-icon { width:40px; height:40px; margin-bottom:14px; display:block; color:var(--red); }
+    .p-icon svg { width:100%; height:100%; stroke:currentColor; fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+    .p-brand-icon { width:36px; height:36px; margin:0 auto 10px; color:var(--red); }
+    .p-brand-icon svg { width:100%; height:100%; stroke:currentColor; fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+    .contact-icon { width:36px; height:36px; margin:0 auto 14px; color:var(--red); }
+    .contact-icon svg { width:100%; height:100%; stroke:currentColor; fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+    .p-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 7px; }
+    .p-card p { font-size: 13px; color: var(--fg-muted); line-height: 1.7; }
+
+    /* process steps */
+    .p-steps { display: grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap: 14px; }
+    .p-step { background: var(--bg-subtle); border: 1.5px solid var(--border); border-radius: 14px; padding: 24px 20px; }
+    .p-step-num { display: inline-block; font-size: 11px; font-weight: 800; color: var(--red); background: var(--red-light); padding: 3px 10px; border-radius: 999px; margin-bottom: 14px; }
+    .p-step h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .p-step p { font-size: 13px; color: var(--fg-muted); line-height: 1.6; }
+
+    /* why */
+    .p-grid-2x2 { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:14px; }
+    .p-owner {
+      background: var(--red); border-radius: 16px; padding: 28px 32px;
+      display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    }
+    .p-owner h3 { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 5px; }
+    .p-owner p { font-size: 14px; color: rgba(255,255,255,.75); max-width: 420px; line-height: 1.6; }
+    .p-owner-links { display: flex; flex-direction: column; gap: 8px; }
+    .p-owner-links a {
+      font-size: 13px; font-weight: 600; color: #fff;
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25);
+      padding: 9px 16px; border-radius: 9px; text-decoration: none;
+      transition: background .2s; white-space: nowrap;
+    }
+    .p-owner-links a:hover { background: rgba(255,255,255,.25); }
+
+    /* reviews */
+    .p-grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; }
+    .p-review { background: var(--bg-subtle); border: 1.5px solid var(--border); border-radius: 16px; padding: 26px; transition: border-color .2s; }
+    .p-review:hover { border-color: #fca5a5; }
+    .p-stars { display:flex; gap:2px; margin-bottom:12px; color:#f59e0b; font-size:13px; }
+    .p-review blockquote { font-size: 13px; line-height: 1.8; color: var(--fg-mid); font-style: italic; margin-bottom: 18px; }
+    .p-reviewer { display:flex; align-items:center; gap:10px; }
+    .p-avatar { width:34px; height:34px; border-radius:50%; background:var(--red-light); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:var(--red); flex-shrink:0; }
+    .p-reviewer-name { font-size:13px; font-weight:600; }
+    .p-reviewer-loc  { font-size:11px; color:var(--fg-muted); }
+
+    /* brands */
+    .p-brands { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; }
+    .p-brand { background:var(--bg-subtle); border:1.5px solid var(--border); border-radius:14px; padding:24px; text-align:center; }
+    .p-brand-icon { font-size:32px; margin-bottom:10px; }
+    .p-brand h4 { font-size:15px; font-weight:700; margin-bottom:6px; }
+    .p-brand p { font-size:13px; color:var(--fg-muted); line-height:1.6; }
+
+    /* ── FORM ── */
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .form-group { display:flex; flex-direction:column; gap:6px; }
+    .form-group.full { grid-column:1/-1; }
+    label { font-size:11px; font-weight:600; color:var(--fg-mid); letter-spacing:.04em; text-transform:uppercase; }
+    input, select, textarea {
+      font-family:inherit; font-size:14px; background:var(--bg-subtle);
+      border:1.5px solid var(--border); border-radius:9px; padding:11px 13px;
+      color:var(--fg); outline:none; transition:border-color .2s, box-shadow .2s; -webkit-appearance:none;
+    }
+    input::placeholder, textarea::placeholder { color:#cbd5e1; }
+    input:focus, select:focus, textarea:focus { border-color:var(--red); box-shadow:0 0 0 3px rgba(220,38,38,.1); }
+    select option { background:#fff; }
+    textarea { resize:vertical; min-height:90px; }
+    .btn-submit {
+      font-family:inherit; font-size:15px; font-weight:700; width:100%; padding:14px;
+      border-radius:10px; border:none; background:var(--red); color:#fff; cursor:pointer; margin-top:6px;
+      box-shadow:0 4px 14px rgba(220,38,38,.28); transition:background .2s, transform .2s;
+    }
+    .btn-submit:hover { background:var(--red-dark); transform:translateY(-1px); }
+    .form-note { font-size:11px; color:var(--fg-muted); text-align:center; margin-top:10px; }
+
+    /* ── FOOTER ── */
+    footer { background: #f8fafc; border-top: 1px solid var(--border); padding: 72px 32px 0; }
+    .foot-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; flex-wrap: wrap; gap: 48px; justify-content: space-between;
+      padding-bottom: 48px;
+    }
+    .foot-left { display: flex; flex-direction: column; gap: 16px; max-width: 280px; }
+    .foot-logo img { height: 40px; width: auto; }
+    .foot-desc { font-size: 13px; color: var(--fg-muted); line-height: 1.7; }
+    .foot-socials { display: flex; align-items: center; gap: 16px; margin-top: 4px; }
+    .foot-socials a {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--fg-muted); text-decoration: none; font-size: 16px;
+      transition: border-color .2s, color .2s, background .2s;
+    }
+    .foot-socials a:hover { border-color: var(--red); color: var(--red); background: var(--red-light); }
+    .foot-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    .foot-col h4 { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 16px; }
+    .foot-col a { display: block; font-size: 13px; color: var(--fg-mid); text-decoration: none; margin-bottom: 10px; font-weight: 500; transition: color .2s; }
+    .foot-col a:hover { color: var(--red); }
+    .foot-bottom {
+      max-width: 1100px; margin: 0 auto;
+      border-top: 1px solid var(--border);
+      padding: 24px 0 32px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    }
+    .foot-bottom p { font-size: 12px; color: var(--fg-muted); }
+    .foot-legal { display: flex; gap: 20px; }
+    .foot-legal a { font-size: 12px; color: var(--fg-muted); text-decoration: none; transition: color .2s; }
+    .foot-legal a:hover { color: var(--red); }
+
+    /* toast */
+    .toast {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(12px);
+      background: #0f172a; color: #fff;
+      font-size: 13px; font-weight: 600; padding: 10px 20px;
+      border-radius: 999px; z-index: 999;
+      opacity: 0; transition: opacity .25s, transform .25s;
+      pointer-events: none; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media(max-width:640px){
+      nav { padding:12px 16px; }
+      .pill-btn span:not(.pill-arrow) { display:none; }
+      .pill-btn { padding: 0 14px; }
+      .collage-inner { height:320px; }
+      .ci1,.ci2,.ci4,.ci6,.ci7,.ci8 { display:none; }
+      .ci0{width:190px;height:145px;}
+      .ci3,.ci5{width:145px;height:108px;}
+      footer { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo" id="navHome">
+    <span class="nav-logo-text">R<span>&amp;</span>R Roofing</span>
+  </a>
+  <ul class="pill-menu">
+    <li><button class="pill-btn" data-panel="services"><span>Services</span></button></li>
+    <li><button class="pill-btn" data-panel="insurance"><span>Insurance</span></button></li>
+    <li><button class="pill-btn" data-panel="why"><span>Why Us</span></button></li>
+    <li><button class="pill-btn" data-panel="reviews"><span>Reviews</span></button></li>
+    <li><button class="pill-btn" data-panel="faq"><span>Q&amp;A</span></button></li>
+    <li><button class="pill-btn" data-panel="contact"><span>Contact</span></button></li>
+    <li><button class="pill-btn pill-cta" data-drawer="estimate"><span class="shine-text">Free Estimate</span></button></li>
+  </ul>
+</nav>
+
+<!-- PANEL OVERLAY -->
+<div class="panel-overlay" id="panelOverlay"></div>
+
+<!-- PANEL: SERVICES -->
+<div class="panel" id="panel-services">
+  <div class="panel-inner">
+    <div class="panel-label">What We Do</div>
+    <h2 class="panel-head">Full-Service Roofing</h2>
+    <p class="panel-sub">Residential and commercial — inspection through install, all in-house.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/><path d="M3 12v9h18v-9"/><path d="M12 3l-2 2M8 7l-1 1M16 7l1 1"/><circle cx="12" cy="8" r="1" fill="currentColor"/></svg></span><h3>Storm Damage Repair</h3><p>Hail, wind, fallen trees — we document everything for your insurer and get repairs moving fast.</p></div>
+      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></span><h3>Full Roof Replacement</h3><p>Complete tear-off and re-roof with premium shingles backed by a manufacturer warranty.</p></div>
+      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></span><h3>Insurance Claim Help</h3><p>We document damage, meet the adjuster, and make sure every line item is covered.</p></div>
+      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></span><h3>Free Roof Inspection</h3><p>Not sure if you have damage? We check — no charge, no pressure, no obligation.</p></div>
+      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7"/><path d="M4 10v10h16V10"/><path d="M4 20c0-2 2-3 4-2s4 1 4-1 2-3 4-2 4 1 4 1"/><path d="M8 10v4"/></svg></span><h3>Gutters &amp; Flashing</h3><p>Damaged gutters cause water intrusion. We inspect and replace as part of every project.</p></div>
+      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><path d="M12 12v4M10 14h4"/></svg></span><h3>Commercial Roofing</h3><p>Flat roofs, TPO, EPDM, and metal systems for commercial properties across PA and NJ.</p></div>
+    </div>
+    <div style="margin-top:28px;">
+      <div class="panel-label" style="margin-bottom:14px;">Materials We Install</div>
+      <div class="p-brands">
+        <div class="p-brand"><div class="p-brand-icon"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><h4>Owens Corning</h4><p>Class 4 impact resistance, lifetime limited warranties.</p></div>
+        <div class="p-brand"><div class="p-brand-icon"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><h4>GAF</h4><p>America's largest manufacturer. No wind speed limit warranty.</p></div>
+        <div class="p-brand"><div class="p-brand-icon"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><h4>CertainTeed</h4><p>Premium architectural shingles with built-in algae resistance.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL: INSURANCE -->
+<div class="panel" id="panel-insurance">
+  <div class="panel-inner">
+    <div class="panel-label">Insurance Restoration</div>
+    <h2 class="panel-head">We Handle the Hard Part</h2>
+    <p class="panel-sub">Most homeowners leave money on the table. Here's how we make sure you don't.</p>
+    <div class="p-steps">
+      <div class="p-step"><span class="p-step-num">01</span><h4>Free Inspection</h4><p>Photos, measurements, full damage report.</p></div>
+      <div class="p-step"><span class="p-step-num">02</span><h4>File Your Claim</h4><p>We help you file so nothing gets missed.</p></div>
+      <div class="p-step"><span class="p-step-num">03</span><h4>Meet the Adjuster</h4><p>We're on-site to account for every line item.</p></div>
+      <div class="p-step"><span class="p-step-num">04</span><h4>Approve &amp; Schedule</h4><p>Most jobs scheduled within days of approval.</p></div>
+      <div class="p-step"><span class="p-step-num">05</span><h4>Installation Day</h4><p>Pro crew, clean site, new roof — usually one day.</p></div>
+    </div>
+    <div style="margin-top:20px;padding:24px;background:var(--red-light);border:1.5px solid #fca5a5;border-radius:14px;">
+      <p style="font-size:14px;color:var(--fg-mid);line-height:1.7;"><strong style="color:var(--fg);">What does it cost you?</strong> Most insurance claims cover the full replacement — you typically only pay your deductible. We'll walk you through exactly what to expect before anything starts.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL: WHY US -->
+<div class="panel" id="panel-why">
+  <div class="panel-inner">
+    <div class="panel-label">Why R&amp;R</div>
+    <h2 class="panel-head">We Fight for Every Dollar<br/>Your Insurance Owes You.</h2>
+    <p class="panel-sub">Most contractors hand you an estimate and walk away. We stay in your corner the whole way.</p>
+    <div class="p-grid-2x2" style="margin-bottom:14px;">
+      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span><h3>All Major Carriers</h3><p>State Farm, Allstate, USAA, Liberty Mutual — we know the process for every major insurer.</p></div>
+      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></span><h3>Full Claim Guidance</h3><p>We walk you through filing, meet the adjuster on-site, and advocate for the full scope of damage.</p></div>
+      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span><h3>Supplement Specialists</h3><p>Find more damage mid-job? We go back to your insurer for additional funds — no cost to you.</p></div>
+      <div class="p-card"><span class="p-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><h3>1-Year Workmanship Warranty</h3><p>Plus manufacturer warranty on Owens Corning, GAF, and CertainTeed shingles on every job.</p></div>
+    </div>
+    <div class="p-owner">
+      <div><h3>You work directly with the owners.</h3><p>No middlemen. When you call R&amp;R, you get Sam — from the first inspection to the final walkthrough.</p></div>
+      <div class="p-owner-links">
+        <a href="tel:4846350750">(484) 635-0750</a>
+        <a href="mailto:rnrroofing@gmail.com">✉️ rnrroofing@gmail.com</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL: REVIEWS -->
+<div class="panel" id="panel-reviews">
+  <div class="panel-inner">
+    <div class="panel-label">Reviews</div>
+    <h2 class="panel-head">What Homeowners Say</h2>
+    <p class="panel-sub">Real customers, real results across PA and NJ.</p>
+    <div class="p-grid-3">
+      <div class="p-review"><div class="p-stars">★★★★★</div><blockquote>"R&amp;R came out the next day, documented everything, and handled my entire claim. New roof in two weeks and barely anything out of pocket."</blockquote><div class="p-reviewer"><div class="p-avatar">MR</div><div><div class="p-reviewer-name">Mike R.</div><div class="p-reviewer-loc">Bucks County, PA</div></div></div></div>
+      <div class="p-review"><div class="p-stars">★★★★★</div><blockquote>"They met my insurance adjuster on-site and made sure nothing was overlooked. The crew was clean, fast, and the roof looks amazing."</blockquote><div class="p-reviewer"><div class="p-avatar">JT</div><div><div class="p-reviewer-name">Jennifer T.</div><div class="p-reviewer-loc">Moorestown, NJ</div></div></div></div>
+      <div class="p-review"><div class="p-stars">★★★★★</div><blockquote>"R&amp;R found damage two other companies missed. Worth every penny — and the insurance covered it anyway."</blockquote><div class="p-reviewer"><div class="p-avatar">DL</div><div><div class="p-reviewer-name">Dave L.</div><div class="p-reviewer-loc">Cherry Hill, NJ</div></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL: FAQ -->
+<div class="panel" id="panel-faq">
+  <div class="panel-inner">
+    <div class="panel-label">Q&amp;A</div>
+    <h2 class="panel-head">Common Questions</h2>
+    <p class="panel-sub">Answers to what most homeowners ask us first.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+      <div class="p-card"><h3>Does insurance cover storm damage?</h3><p>Many homeowner policies cover wind and hail damage when enough storm-related damage is found during inspection.</p></div>
+      <div class="p-card"><h3>Will my rates go up if I file a claim?</h3><p>Storm claims are often treated differently than at-fault claims — but it depends on your carrier and policy. We'll help you understand your options.</p></div>
+      <div class="p-card"><h3>How long does a replacement take?</h3><p>Most residential roofs are completed in a single day, depending on size and weather.</p></div>
+      <div class="p-card"><h3>What does it actually cost me?</h3><p>Most homeowners only pay their deductible. Insurance typically covers the full cost of the roof — we'll walk you through exactly what to expect.</p></div>
+      <div class="p-card"><h3>How do I know if I have damage?</h3><p>Missing shingles, leaks, lifted tabs, or granule loss are common signs — but some damage is only visible during a professional inspection. We'll check for free.</p></div>
+      <div class="p-card"><h3>What if my claim gets denied?</h3><p>We're experienced with appeals and supplements. If damage was missed or underpaid, we go back to your insurer on your behalf.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL: CONTACT -->
+<div class="panel" id="panel-contact">
+  <div class="panel-inner">
+    <div class="panel-label">Contact</div>
+    <h2 class="panel-head">Get in Touch</h2>
+    <p class="panel-sub">Reach us directly — we're the owners, so you'll always talk to someone who knows your job.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px;">
+      <a href="tel:4846350750" class="p-card" data-copy="(484) 635-0750" data-copy-label="Phone number copied!" style="text-align:center;text-decoration:none;display:block;cursor:pointer;">
+        <div class="contact-icon"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.17 3.2 2 2 0 012.16 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+        <h3 style="margin-bottom:8px;">Call or Text</h3>
+        <span style="font-size:18px;font-weight:700;color:var(--red);">(484) 635-0750</span>
+        <p style="margin-top:8px;color:var(--fg-muted);">Click to copy &middot; Mon–Sat, 7am–7pm</p>
+      </a>
+      <a href="mailto:rnrroofing@gmail.com" class="p-card" data-copy="rnrroofing@gmail.com" data-copy-label="Email address copied!" style="text-align:center;text-decoration:none;display:block;cursor:pointer;">
+        <div class="contact-icon"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <h3 style="margin-bottom:8px;">Email Us</h3>
+        <span style="font-size:15px;font-weight:700;color:var(--red);">rnrroofing@gmail.com</span>
+        <p style="margin-top:8px;color:var(--fg-muted);">Click to copy &middot; Reply within 24 hrs</p>
+      </a>
+      <a href="https://maps.google.com/?q=2617+Alden+Road+Bryn+Athyn+PA+19009" target="_blank" rel="noopener" class="p-card" style="text-align:center;text-decoration:none;display:block;cursor:pointer;">
+        <div class="contact-icon"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <h3 style="margin-bottom:8px;">Location</h3>
+        <span style="font-weight:600;color:var(--fg);">2617 Alden Road<br/>Bryn Athyn, PA 19009</span>
+        <p style="margin-top:8px;">Serving Greater Philadelphia &amp; South Jersey</p>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<main>
+  <section class="hero">
+    <div class="hero-text">
+      <div class="hero-logo fade-up d1">
+        <img src="logo.png" alt="R&R Roofing" />
+      </div>
+      <div class="hero-badge fade-up d2"><span></span> Bryn Athyn, PA &middot; Greater Philadelphia</div>
+      <h1 class="fade-up d3">Storm Damage?<br/><em>We Handle Everything.</em></h1>
+      <p class="hero-sub fade-up d3">Free inspection to final install — R&amp;R Roofing works directly with your insurance so you don't have to.</p>
+      <div class="hero-ctas fade-up d4">
+        <button class="btn-primary" data-drawer="estimate"><span class="shine-text">Get a Free Estimate</span></button>
+        <button class="btn-secondary" data-panel="insurance"><span class="shine-text">How Claims Work →</span></button>
+      </div>
+    </div>
+
+    <div class="collage">
+      <canvas id="webgl-canvas"></canvas>
+      <div class="collage-inner">
+        <img class="ci0" src="stock3.png" alt="R&R Roofing inspector on roof" />
+        <img class="ci1" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=500&q=80&auto=format&fit=crop" alt="Beautiful home exterior" />
+        <img class="ci2" src="stock1.png" alt="Roofer working on shingles" />
+        <img class="ci3" src="stock4.png" alt="Beautiful home with new roof" />
+        <img class="ci4" src="https://images.unsplash.com/photo-1635424824849-1b09bdcc55b1?w=500&q=80&auto=format&fit=crop" alt="Roofer installing shingles" />
+        <img class="ci5" src="stock2.png" alt="House with ladder for roof work" />
+        <img class="ci6" src="https://images.unsplash.com/photo-1558036117-15d82a90b9b1?w=600&q=80&auto=format&fit=crop" alt="Residential roofing" />
+        <img class="ci7" src="https://images.unsplash.com/photo-1591588582259-e675bd2e6088?w=500&q=80&auto=format&fit=crop" alt="Roof damage inspection" />
+        <img class="ci8" src="https://images.unsplash.com/photo-1567361808960-dec9cb578182?w=500&q=80&auto=format&fit=crop" alt="New roof installation" />
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ESTIMATE MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal-estimate">
+  <div class="modal-head">
+    <h2>Free Estimate</h2>
+    <button class="modal-close" id="modalClose">&times;</button>
+  </div>
+  <div class="modal-body">
+    <p style="font-size:14px;color:var(--fg-muted);margin-bottom:24px;line-height:1.6;">We'll get back to you within 24 hours to schedule your inspection — no obligation, no pressure.</p>
+    <form>
+      <div class="form-grid">
+        <div class="form-group"><label>First Name</label><input type="text" placeholder="John" /></div>
+        <div class="form-group"><label>Last Name</label><input type="text" placeholder="Smith" /></div>
+        <div class="form-group"><label>Email</label><input type="email" placeholder="john@email.com" /></div>
+        <div class="form-group"><label>Phone</label><input type="tel" placeholder="(215) 555-0100" /></div>
+        <div class="form-group full"><label>Property Address</label><input type="text" placeholder="123 Main St, Philadelphia, PA" /></div>
+        <div class="form-group full"><label>What can we help with?</label>
+          <select>
+            <option value="">Select...</option>
+            <option>Storm Damage Inspection</option>
+            <option>Full Roof Replacement</option>
+            <option>Insurance Claim Help</option>
+            <option>Gutters / Flashing</option>
+            <option>Commercial Roofing</option>
+            <option>Not sure — just need an inspection</option>
+          </select>
+        </div>
+        <div class="form-group full"><label>Anything else? (optional)</label><textarea placeholder="Describe the damage or any details we should know..."></textarea></div>
+      </div>
+      <button type="submit" class="btn-submit">Request My Free Estimate &rarr;</button>
+      <p class="form-note">Most insurance claims cover the full replacement — you typically only pay your deductible.</p>
+    </form>
+  </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-left">
+      <div class="foot-logo"><img src="logo.png" alt="R&R Roofing" /></div>
+      <p class="foot-desc">Storm damage restoration serving Greater Philadelphia &amp; South Jersey. Claim to completion — we handle it all.</p>
+      <div class="foot-socials">
+        <a href="#" aria-label="Facebook">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="https://www.instagram.com" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href="https://maps.google.com/?q=R%26R+Roofing+Bryn+Athyn+PA" target="_blank" rel="noopener" aria-label="Find us on Google Maps">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M21.8 10.2H12v3.6h5.7c-.5 2.6-2.8 4.4-5.7 4.4-3.3 0-6-2.7-6-6s2.7-6 6-6c1.5 0 2.9.6 4 1.5l2.6-2.6C17 3.5 14.6 2.4 12 2.4 6.7 2.4 2.4 6.7 2.4 12s4.3 9.6 9.6 9.6c5.5 0 9.2-3.9 9.2-9.3 0-.6-.1-1.4-.4-2.1z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="foot-cols">
+      <div class="foot-col">
+        <h4>Services</h4>
+        <a href="#" onclick="openPanel('services');return false;">Storm Damage</a>
+        <a href="#" onclick="openPanel('services');return false;">Roof Replacement</a>
+        <a href="#" onclick="openPanel('services');return false;">Insurance Claims</a>
+        <a href="#" onclick="openPanel('services');return false;">Gutters &amp; Flashing</a>
+        <a href="#" onclick="openPanel('services');return false;">Commercial Roofing</a>
+      </div>
+      <div class="foot-col">
+        <h4>Company</h4>
+        <a href="#" onclick="openPanel('why');return false;">About Us</a>
+        <a href="#" onclick="openPanel('reviews');return false;">Reviews</a>
+        <a href="#" onclick="openPanel('faq');return false;">Q&amp;A</a>
+        <a href="#" onclick="openPanel('contact');return false;">Contact</a>
+      </div>
+      <div class="foot-col">
+        <h4>Service Areas</h4>
+        <a href="https://maps.google.com/?q=Philadelphia+PA" target="_blank" rel="noopener">Philadelphia, PA</a>
+        <a href="https://maps.google.com/?q=Bucks+County+PA" target="_blank" rel="noopener">Bucks County, PA</a>
+        <a href="https://maps.google.com/?q=Cherry+Hill+NJ" target="_blank" rel="noopener">Cherry Hill, NJ</a>
+        <a href="https://maps.google.com/?q=Moorestown+NJ" target="_blank" rel="noopener">Moorestown, NJ</a>
+        <a href="https://maps.google.com/?q=South+Jersey" target="_blank" rel="noopener">South Jersey</a>
+      </div>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <p>&copy; 2026 R&amp;R Roofing. All rights reserved.</p>
+    <p style="font-size:12px;color:var(--fg-muted);">
+      <a href="tel:4846350750" style="color:var(--fg-mid);text-decoration:none;">(484) 635-0750</a>
+      &nbsp;&middot;&nbsp;
+      <a href="mailto:rnrroofing@gmail.com" style="color:var(--fg-mid);text-decoration:none;">rnrroofing@gmail.com</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+  const overlay    = document.getElementById('panelOverlay');
+  const modalOL    = document.getElementById('modalOverlay');
+  const nav        = document.getElementById('nav');
+  let activePanel  = null;
+
+  document.getElementById('navHome').addEventListener('click', e => {
+    e.preventDefault();
+    closePanel();
+  });
+
+  window.openPanel = function(id) {
+    if (activePanel) closePanel(false);
+    activePanel = document.getElementById('panel-' + id);
+    if (!activePanel) return;
+    activePanel.classList.add('visible');
+    overlay.classList.add('visible');
+    nav.classList.add('panel-open');
+    document.querySelectorAll('.pill-btn[data-panel]').forEach(b =>
+      b.classList.toggle('active', b.dataset.panel === id));
+  }
+
+  function closePanel(clearActive = true) {
+    if (activePanel) activePanel.classList.remove('visible');
+    overlay.classList.remove('visible');
+    nav.classList.remove('panel-open');
+    document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+    if (clearActive) activePanel = null;
+  }
+
+  function openModal() {
+    modalOL.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modalOL.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Nav pills
+  document.querySelectorAll('.pill-btn[data-panel]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.panel;
+      activePanel && activePanel.id === 'panel-' + id ? closePanel() : openPanel(id);
+    });
+  });
+
+  // All estimate triggers
+  document.querySelectorAll('[data-drawer="estimate"]').forEach(el =>
+    el.addEventListener('click', openModal));
+
+  // Hero "How Claims Work" button
+  document.querySelectorAll('[data-panel]:not(.pill-btn)').forEach(el =>
+    el.addEventListener('click', () => openPanel(el.dataset.panel)));
+
+  // Close
+  overlay.addEventListener('click', closePanel);
+  modalOL.addEventListener('click', e => { if (e.target === modalOL) closeModal(); });
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closePanel(); closeModal(); }
+  });
+</script>
+<script>
+(function(){
+  const canvas    = document.getElementById('webgl-canvas');
+  const container = canvas.parentElement; // .collage div
+  const hero      = document.querySelector('.hero');
+  const gl        = canvas.getContext('webgl',{antialias:true,alpha:true});
+  if(!gl) return;
+
+  const VS = `attribute vec3 a_position;attribute vec2 a_uv;varying vec2 v_texcoord;void main(){gl_Position=vec4(a_position,1.0);v_texcoord=a_uv;}`;
+  const FS = `
+#ifdef GL_ES
+precision highp float;
+#endif
+uniform vec2 u_mouse;uniform vec2 u_resolution;uniform float u_pixelRatio;uniform float u_time;uniform int u_shape;
+#define PI 3.1415926535897932384626433832795
+#define TWO_PI 6.2831853071795864769252867665590
+mat3 rotateX(float a){float s=sin(a),c=cos(a);return mat3(1,0,0,0,c,-s,0,s,c);}
+mat3 rotateY(float a){float s=sin(a),c=cos(a);return mat3(c,0,s,0,1,0,-s,0,c);}
+mat3 rotateZ(float a){float s=sin(a),c=cos(a);return mat3(c,-s,0,s,c,0,0,0,1);}
+vec2 coord(in vec2 p){p=p/u_resolution.xy;if(u_resolution.x>u_resolution.y){p.x*=u_resolution.x/u_resolution.y;p.x+=(u_resolution.y-u_resolution.x)/u_resolution.y/2.0;}else{p.y*=u_resolution.y/u_resolution.x;p.y+=(u_resolution.x-u_resolution.y)/u_resolution.x/2.0;}p-=0.5;return p;}
+vec2 project(vec3 p){float persp=2.0/(2.0-p.z);return p.xy*persp;}
+float distToSegment(vec2 p,vec2 a,vec2 b){vec2 pa=p-a,ba=b-a;float h=clamp(dot(pa,ba)/dot(ba,ba),0.0,1.0);return length(pa-ba*h);}
+float drawLine(vec2 p,vec2 a,vec2 b,float thickness,float blur){float d=distToSegment(p,a,b);return smoothstep(thickness+blur,thickness-blur,d);}
+void getCubeVerts(out vec3 v[8]){float s=0.7;v[0]=vec3(-s,-s,-s);v[1]=vec3(s,-s,-s);v[2]=vec3(s,s,-s);v[3]=vec3(-s,s,-s);v[4]=vec3(-s,-s,s);v[5]=vec3(s,-s,s);v[6]=vec3(s,s,s);v[7]=vec3(-s,s,s);}
+void getOctaVerts(out vec3 v[6]){v[0]=vec3(1,0,0);v[1]=vec3(-1,0,0);v[2]=vec3(0,1,0);v[3]=vec3(0,-1,0);v[4]=vec3(0,0,1);v[5]=vec3(0,0,-1);}
+void getIcoVerts(out vec3 v[12]){float t=(1.0+sqrt(5.0))/2.0,s=1.0/sqrt(1.0+t*t);v[0]=vec3(-s,t*s,0);v[1]=vec3(s,t*s,0);v[2]=vec3(-s,-t*s,0);v[3]=vec3(s,-t*s,0);v[4]=vec3(0,-s,t*s);v[5]=vec3(0,s,t*s);v[6]=vec3(0,-s,-t*s);v[7]=vec3(0,s,-t*s);v[8]=vec3(t*s,0,-s);v[9]=vec3(t*s,0,s);v[10]=vec3(-t*s,0,-s);v[11]=vec3(-t*s,0,s);}
+float drawWireframe(vec2 p,int shape,mat3 rot,float scale,float thick,float blur){
+  float r=0.0;
+  if(shape==0){vec3 v[8];getCubeVerts(v);for(int i=0;i<8;i++)v[i]=rot*(v[i]*scale);
+    r+=drawLine(p,project(v[0]),project(v[1]),thick,blur);r+=drawLine(p,project(v[1]),project(v[2]),thick,blur);r+=drawLine(p,project(v[2]),project(v[3]),thick,blur);r+=drawLine(p,project(v[3]),project(v[0]),thick,blur);
+    r+=drawLine(p,project(v[4]),project(v[5]),thick,blur);r+=drawLine(p,project(v[5]),project(v[6]),thick,blur);r+=drawLine(p,project(v[6]),project(v[7]),thick,blur);r+=drawLine(p,project(v[7]),project(v[4]),thick,blur);
+    r+=drawLine(p,project(v[0]),project(v[4]),thick,blur);r+=drawLine(p,project(v[1]),project(v[5]),thick,blur);r+=drawLine(p,project(v[2]),project(v[6]),thick,blur);r+=drawLine(p,project(v[3]),project(v[7]),thick,blur);
+  }else if(shape==1){vec3 v[6];getOctaVerts(v);for(int i=0;i<6;i++)v[i]=rot*(v[i]*scale);
+    r+=drawLine(p,project(v[2]),project(v[0]),thick,blur);r+=drawLine(p,project(v[2]),project(v[1]),thick,blur);r+=drawLine(p,project(v[2]),project(v[4]),thick,blur);r+=drawLine(p,project(v[2]),project(v[5]),thick,blur);
+    r+=drawLine(p,project(v[3]),project(v[0]),thick,blur);r+=drawLine(p,project(v[3]),project(v[1]),thick,blur);r+=drawLine(p,project(v[3]),project(v[4]),thick,blur);r+=drawLine(p,project(v[3]),project(v[5]),thick,blur);
+    r+=drawLine(p,project(v[0]),project(v[4]),thick,blur);r+=drawLine(p,project(v[4]),project(v[1]),thick,blur);r+=drawLine(p,project(v[1]),project(v[5]),thick,blur);r+=drawLine(p,project(v[5]),project(v[0]),thick,blur);
+  }else{vec3 v[12];getIcoVerts(v);for(int i=0;i<12;i++)v[i]=rot*(v[i]*scale);
+    r+=drawLine(p,project(v[0]),project(v[1]),thick,blur);r+=drawLine(p,project(v[0]),project(v[5]),thick,blur);r+=drawLine(p,project(v[0]),project(v[7]),thick,blur);r+=drawLine(p,project(v[0]),project(v[10]),thick,blur);r+=drawLine(p,project(v[0]),project(v[11]),thick,blur);
+    r+=drawLine(p,project(v[1]),project(v[5]),thick,blur);r+=drawLine(p,project(v[1]),project(v[7]),thick,blur);r+=drawLine(p,project(v[1]),project(v[8]),thick,blur);r+=drawLine(p,project(v[1]),project(v[9]),thick,blur);
+    r+=drawLine(p,project(v[2]),project(v[3]),thick,blur);r+=drawLine(p,project(v[2]),project(v[4]),thick,blur);r+=drawLine(p,project(v[2]),project(v[6]),thick,blur);r+=drawLine(p,project(v[2]),project(v[10]),thick,blur);r+=drawLine(p,project(v[2]),project(v[11]),thick,blur);
+    r+=drawLine(p,project(v[3]),project(v[4]),thick,blur);r+=drawLine(p,project(v[3]),project(v[6]),thick,blur);r+=drawLine(p,project(v[3]),project(v[8]),thick,blur);r+=drawLine(p,project(v[3]),project(v[9]),thick,blur);
+    r+=drawLine(p,project(v[4]),project(v[5]),thick,blur);r+=drawLine(p,project(v[4]),project(v[11]),thick,blur);r+=drawLine(p,project(v[5]),project(v[11]),thick,blur);
+    r+=drawLine(p,project(v[6]),project(v[7]),thick,blur);r+=drawLine(p,project(v[6]),project(v[8]),thick,blur);r+=drawLine(p,project(v[6]),project(v[10]),thick,blur);
+    r+=drawLine(p,project(v[7]),project(v[10]),thick,blur);r+=drawLine(p,project(v[8]),project(v[9]),thick,blur);r+=drawLine(p,project(v[9]),project(v[11]),thick,blur);r+=drawLine(p,project(v[10]),project(v[11]),thick,blur);
+  }
+  return clamp(r,0.0,1.0);
+}
+vec3 render(vec2 st,vec2 mouse){
+  float md=length(st-mouse);float mi=1.0-smoothstep(0.0,0.5,md);
+  float time=u_time*0.2;
+  mat3 rot=rotateY(time+(mouse.x-0.5)*mi*1.0)*rotateX(time*0.7+(mouse.y-0.5)*mi*1.0)*rotateZ(time*0.1);
+  float blur=mix(0.0001,0.05,mi);float thick=mix(0.003,0.005,mi);
+  float ar=u_resolution.x/u_resolution.y;float fitScale=0.6*min(1.0,ar);
+  float shape=drawWireframe(st,u_shape,rot,fitScale,thick,blur);
+  vec3 baseColor=mix(vec3(0.18,0.20,0.24),vec3(0.08,0.09,0.12),mi);
+  vec3 color=baseColor*shape*(0.9+mi*0.4);
+  return pow(color,vec3(0.85));
+}
+void main(){vec2 st=coord(gl_FragCoord.xy);vec2 mouse=coord(u_mouse*u_pixelRatio)*vec2(1.,-1.);vec3 c=render(st,mouse);float a=clamp(length(c)*4.0,0.0,1.0);gl_FragColor=vec4(c,a);}`;
+
+  function compileShader(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { console.error(gl.getShaderInfoLog(s)); return null; }
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, compileShader(gl.VERTEX_SHADER, VS));
+  gl.attachShader(prog, compileShader(gl.FRAGMENT_SHADER, FS));
+  gl.linkProgram(prog); gl.useProgram(prog);
+
+  const uniforms = {};
+  ['u_mouse','u_resolution','u_pixelRatio','u_time','u_shape'].forEach(u =>
+    uniforms[u] = gl.getUniformLocation(prog, u));
+
+  const verts = new Float32Array([-1,-1,0,1,-1,0,-1,1,0,1,1,0]);
+  const uvs   = new Float32Array([0,0,1,0,0,1,1,1]);
+  const pb = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,pb); gl.bufferData(gl.ARRAY_BUFFER,verts,gl.STATIC_DRAW);
+  const pl = gl.getAttribLocation(prog,'a_position'); gl.enableVertexAttribArray(pl); gl.vertexAttribPointer(pl,3,gl.FLOAT,false,0,0);
+  const ub = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,ub); gl.bufferData(gl.ARRAY_BUFFER,uvs,gl.STATIC_DRAW);
+  const ul = gl.getAttribLocation(prog,'a_uv'); gl.enableVertexAttribArray(ul); gl.vertexAttribPointer(ul,2,gl.FLOAT,false,0,0);
+
+  const mouse = {x:0,y:0}, damp = {x:0,y:0};
+  let shape = 0, last = performance.now();
+  const start = Date.now();
+
+  function resize() {
+    const dpr = Math.min(devicePixelRatio,2);
+    canvas.width  = container.clientWidth  * dpr;
+    canvas.height = container.clientHeight * dpr;
+    canvas.style.width  = container.clientWidth  + 'px';
+    canvas.style.height = container.clientHeight + 'px';
+    gl.viewport(0,0,canvas.width,canvas.height);
+  }
+
+  function animate(now) {
+    const dt = (now - last) / 1000; last = now;
+    damp.x += (mouse.x - damp.x) * 8 * dt;
+    damp.y += (mouse.y - damp.y) * 8 * dt;
+    gl.clearColor(0.0,0.0,0.0,0); gl.clear(gl.COLOR_BUFFER_BIT);
+    const dpr = Math.min(devicePixelRatio,2);
+    gl.uniform2f(uniforms.u_mouse, damp.x, damp.y);
+    gl.uniform2f(uniforms.u_resolution, canvas.width, canvas.height);
+    gl.uniform1f(uniforms.u_pixelRatio, dpr);
+    gl.uniform1f(uniforms.u_time, (Date.now()-start)/1000);
+    gl.uniform1i(uniforms.u_shape, shape);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener('mousemove', e => {
+    const r = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+  });
+  container.addEventListener('click', () => { shape = (shape + 1) % 3; });
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(animate);
+})();
+</script>
+
+<div class="toast" id="toast"></div>
+
+<script>
+document.querySelectorAll('[data-copy]').forEach(el => {
+  el.addEventListener('click', e => {
+    e.preventDefault();
+    navigator.clipboard.writeText(el.dataset.copy).then(() => {
+      const toast = document.getElementById('toast');
+      toast.textContent = el.dataset.copyLabel || 'Copied!';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    });
+  });
+});
+</script>
+</body>
+</html>
