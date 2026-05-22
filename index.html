@@ -190,6 +190,11 @@
       color: var(--fg); margin-bottom: 18px;
     }
     .hero h1 em { font-style: normal; color: var(--red); }
+    #text-rotate { display:inline-block; min-width:2ch; vertical-align:bottom; overflow:hidden; }
+    .tr-char { display:inline-block; animation: tr-in 0.5s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .tr-char.exit { animation: tr-out 0.28s cubic-bezier(0.4,0,1,1) both; }
+    @keyframes tr-in  { from { opacity:0; transform:translateY(55%);  } to { opacity:1; transform:translateY(0); } }
+    @keyframes tr-out { from { opacity:1; transform:translateY(0);     } to { opacity:0; transform:translateY(-75%); } }
     .hero-sub { font-size: clamp(15px, 1.8vw, 18px); color: var(--fg-muted); line-height: 1.7; max-width: 480px; margin: 0 auto 28px; }
     .hero-ctas { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
     /* ── IMAGE FAN ── */
@@ -791,7 +796,7 @@
         <img src="logo.png" alt="R&R Roofing" />
       </div>
       <div class="hero-badge fade-up d2"><span></span> Bryn Athyn, PA &middot; Greater Philadelphia</div>
-      <h1 class="fade-up d3">Storm Damage?<br/><em>We Handle Everything.</em></h1>
+      <h1 class="fade-up d3">Storm Damage?<br/><em>We Handle <span id="text-rotate" aria-live="polite"></span></em></h1>
       <p class="hero-sub fade-up d3">Free inspection to final install — R&amp;R Roofing works directly with your insurance so you don't have to.</p>
       <div class="hero-ctas fade-up d4">
         <button class="btn-primary" data-drawer="estimate"><span class="shine-text">Get a Free Estimate</span></button>
@@ -977,6 +982,35 @@
   });
 </script>
 <script>
+// Rotating headline text
+(function(){
+  const words = ['Everything.','Your Claim.','The Inspection.','All Paperwork.','Installation.'];
+  const el = document.getElementById('text-rotate');
+  let idx = 0;
+  function chars(str) {
+    if (typeof Intl !== 'undefined' && 'Segmenter' in Intl)
+      return [...new Intl.Segmenter('en',{granularity:'grapheme'}).segment(str)].map(s=>s.segment);
+    return [...str];
+  }
+  function show(word) {
+    const current = [...el.children];
+    current.forEach((c,i) => { c.classList.add('exit'); c.style.animationDelay = i*0.022+'s'; });
+    const wait = current.length ? 280 + current.length*22 : 0;
+    setTimeout(() => {
+      el.innerHTML = '';
+      chars(word).forEach((ch,i) => {
+        const s = document.createElement('span');
+        s.className = 'tr-char';
+        s.textContent = ch;
+        s.style.animationDelay = i*0.038+'s';
+        el.appendChild(s);
+      });
+    }, wait);
+  }
+  show(words[0]);
+  setInterval(() => { idx = (idx+1)%words.length; show(words[idx]); }, 2800);
+})();
+
 // Fan animation — trigger after short delay so layout is settled
 setTimeout(() => {
   document.querySelectorAll('.fan-group').forEach((group, i) => {
